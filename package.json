@@ -1,0 +1,12 @@
+{ "name": "dev-web-server"
+, "version": "0.1.0"
+, "author": "Paul Shannon"
+, "description": "a simple web server without caching for development"
+, "main":"./app.js"
+, "scripts":{ "test":"nodeunit test" }
+, "dependencies" : { "express" : ">=3.0"
+                   , "optimist" : ">=0.3"
+                   }
+, "devDependencies": { }
+, "engine": { "node": ">=0.8" }
+}
