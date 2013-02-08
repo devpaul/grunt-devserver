@@ -19,13 +19,19 @@ A simple development web server that serves static content from a directory
 ```
 
 ### From Grunt
-Add this to your grunt configuration:
+In your grunt.js file add this to your grunt configuration:
 ```
-    devserver : { 'port' : <port number> (defaults to 8888)
-                , 'base' : <directory> (defaults to .)
-                }
+devserver : { 'port' : <port number> (defaults to 8888)
+            , 'base' : <directory> (defaults to .)
+            }
 ```
-And execute using:
+
+Load the devserver task:
+```
+grunt.loadNpmTasks(grunt-devserver)
+```
+
+and execute using:
 ```
 grunt devserver
 ```
