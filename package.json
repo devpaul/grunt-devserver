@@ -1,5 +1,5 @@
 { "name": "grunt-devserver"
-, "version": "0.1.1"
+, "version": "0.1.2"
 , "description": "a simple web server without caching for development"
 , "homepage" : "https://github.com/devpaul/dev-web-server"
 , "author": "Paul Shannon"
