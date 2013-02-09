@@ -1,12 +1,12 @@
 { "name": "grunt-devserver"
 , "version": "0.1.2"
 , "description": "a simple web server without caching for development"
-, "homepage" : "https://github.com/devpaul/dev-web-server"
+, "homepage" : "https://github.com/devpaul/grunt-devserver"
 , "author": "Paul Shannon"
 , "repository" : { "type" : "git"
-                 , "url" : "git://github.com/devpaul/dev-web-server.git"
+                 , "url" : "git://github.com/devpaul/grunt-devserver.git"
                  }
-, "bugs" : { "url" : "https://github.com/devpaul/dev-web-server/issues" }
+, "bugs" : { "url" : "https://github.com/devpaul/grunt-devserver/issues" }
 , "main":"./app.js"
 , "scripts":{ "test":"nodeunit test" }
 , "dependencies" : { "express" : ">=3.0"
