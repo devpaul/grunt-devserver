@@ -1,4 +1,6 @@
+var devserver = require('./lib')
+
 if(module.parent == null)
-    require('./lib/console/console.js')
+    devserver.commands.startFromConsole()
 else
-    module.exports = require('./lib/tasks/devserver.js')
+    module.exports = devserver.commands.registerGruntTasks

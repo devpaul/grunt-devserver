@@ -1,3 +1,5 @@
+var path = require('path');
+
 module.exports = function(grunt) {
     function createConfig() {
         var config = {}
@@ -11,6 +13,6 @@ module.exports = function(grunt) {
                            }
     }
 
-    grunt.loadTasks('../');
+    grunt.loadTasks(path.resolve('../'));
     grunt.initConfig(createConfig());
 }
