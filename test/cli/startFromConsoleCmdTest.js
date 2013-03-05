@@ -1,6 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
-  , Server = require('../../../lib/Server.js')
-  , Config = require('../../../lib/Config.js')
+  , Server = require('../../lib/Server.js')
+  , Config = require('../../lib/Config.js')
 
 describe("startFromConsoleCmdTest", function() {
     var startFromConsoleCmd, ServerSpy, startServerStub
@@ -15,8 +15,8 @@ describe("startFromConsoleCmdTest", function() {
     })
 
     function mockDependenciesForUnitUnderTest() {
-        var UNIT_UNDER_TEST_PATH = '../../../lib/commands/cli/startFromConsoleCmd'
-          , options = { requires : { '../../Server.js' : createMockServer() } }
+        var UNIT_UNDER_TEST_PATH = '../../lib/cli/startFromConsoleCmd'
+          , options = { requires : { '../Server.js' : createMockServer() } }
         startFromConsoleCmd = SandboxedModule.require(UNIT_UNDER_TEST_PATH, options)
     }
 

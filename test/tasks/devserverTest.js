@@ -1,9 +1,9 @@
 var SandboxedModule = require('sandboxed-module')
-  , Server = require('../../../lib/Server.js')
-  , Config = require('../../../lib/Config.js')
+  , Server = require('../../lib/Server.js')
+  , Config = require('../../lib/Config.js')
 
-describe("registerGruntTasksCmdTest", function() {
-    var registerGruntTasksCmd, ServerSpy, startServerStub, gruntStub
+describe("devserverTest", function() {
+    var devserver, ServerSpy, startServerStub, gruntStub
 
     beforeEach(function() {
         gruntStub = createGruntStub()
@@ -15,8 +15,8 @@ describe("registerGruntTasksCmdTest", function() {
     })
 
     function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../../Server.js' : createMockServer() } }
-        registerGruntTasksCmd = SandboxedModule.require('../../../lib/commands/grunt/registerGruntTasksCmd', options)
+        var options = { requires : { '../lib/Server.js' : createMockServer() } }
+        devserver = SandboxedModule.require('../../tasks/devserver', options)
     }
 
     function createMockServer() {
@@ -32,7 +32,7 @@ describe("registerGruntTasksCmdTest", function() {
     }
 
     it("registers a devserver grunt task", function() {
-        registerGruntTasksCmd(gruntStub)
+        devserver(gruntStub)
         expect(gruntStub.registerTask.calledOnce).to.be.true
         expect(gruntStub.registerTask.firstCall.args[0]).to.be.equal('devserver')
     })
@@ -42,7 +42,7 @@ describe("registerGruntTasksCmdTest", function() {
 
         beforeEach(function() {
             asyncStub = { async : sinon.stub() }
-            registerGruntTasksCmd(gruntStub)
+            devserver(gruntStub)
             devserverTask = gruntStub.registerTask.firstCall.args[2]
             devserverTask.call(asyncStub)
         })
@@ -60,6 +60,41 @@ describe("registerGruntTasksCmdTest", function() {
             expect(server).to.be.defined
             expect(startServerStub.calledOnce).to.be.true
             expect(server.config.port).to.be.equal(Config.DEFAULT_PORT)
+        })
+    })
+
+    describe("buildConfig", function() {
+        var configMap, grunt
+
+        beforeEach(function() {
+            grunt = { config : getConfig }
+            configMap = {}
+        })
+
+        function getConfig(name) {
+            return configMap[name]
+        }
+
+        it("defaults the server port when one is not provided", function() {
+            var config = devserver.buildConfig(grunt)
+            expect(config.port).to.be.equal(Config.DEFAULT_PORT)
+        })
+
+        it("configures the server port number from grunt", function() {
+            var expected = configMap['devserver.port'] = 2468
+              , config = devserver.buildConfig(grunt)
+            expect(config.port).to.be.equal(expected)
+        })
+
+        it("defaults the folder when one is not provided", function() {
+            var config = devserver.buildConfig(grunt)
+            expect(config.folder).to.be.equal(Config.DEFAULT_FOLDER)
+        })
+
+        it("configures the folder from grunt", function() {
+            var expected = configMap['devserver.base'] = "../"
+              , config = devserver.buildConfig(grunt)
+            expect(config.folder).to.be.equal(expected)
         })
     })
 })

@@ -1,31 +1,44 @@
-{ "name": "grunt-devserver"
-, "version": "0.1.2"
-, "description": "a simple web server without caching for development"
-, "homepage" : "https://github.com/devpaul/grunt-devserver"
-, "author": "Paul Shannon"
-, "repository" : { "type" : "git"
-                 , "url" : "git://github.com/devpaul/grunt-devserver.git"
-                 }
-, "bugs" : { "url" : "https://github.com/devpaul/grunt-devserver/issues" }
-, "main" : "index"
-, "scripts" : { "test" : "./node_modules/.bin/mocha -u bdd"
-              , "start" : "node ./app.js"
-              }
-, "dependencies" : { "express" : ">=3.0"
-                   , "optimist" : ">=0.3"
-                   }
-, "devDependencies": { "grunt" : "0.3.x"
-                     , "mocha" : "*"
-                     , "chai" : "*"
-                     , "sinon" : "*"
-                     , "sinon-chai" : "*"
-                     , "supertest" : "*"
-                     , "sandboxed-module" : "*"
-                     , "testutil" : "git://github.com/devpaul/node-testutil.git"
-                     }
-, "keywords" : [ "grunt"
-               , "gruntplugin"
-               , "server"
-               ]
-, "engine": { "node": ">=0.8" }
+{
+  "name": "grunt-devserver",
+  "version": "0.2.0",
+  "description": "a simple web server without caching for development",
+  "homepage": "https://github.com/devpaul/grunt-devserver",
+  "author": "Paul Shannon",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/devpaul/grunt-devserver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devpaul/grunt-devserver/issues"
+  },
+  "main": "index",
+  "scripts": {
+    "test": "grunt test",
+    "start": "node ./"
+  },
+  "dependencies": {
+    "express": ">=3.0",
+    "optimist": ">=0.3"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "mocha": "*",
+    "chai": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "supertest": "*",
+    "sandboxed-module": "*",
+    "grunt-mocha-test": "~0.2.0"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.0"
+  },
+  "engine": {
+    "node": ">=0.8"
+  },
+  "keywords": [
+    "grunt",
+    "gruntplugin",
+    "server"
+  ]
 }

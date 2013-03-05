@@ -5,10 +5,10 @@ A simple development web server that serves static content from a directory
 * execute from grunt or command line
 * logs requests to console
 * no caching of served content
+* CORS support header
 
 ### Future
 * serve up multiple folders
-* CORS support header
 * proxy service
 
 ## Usage
