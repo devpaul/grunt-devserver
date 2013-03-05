@@ -1,0 +1,6 @@
+-u bdd
+--reporter spec
+--colors
+--growl
+--watch
+--recursive ./test
