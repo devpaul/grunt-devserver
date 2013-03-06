@@ -13,7 +13,7 @@
   },
   "main": "index",
   "scripts": {
-    "test": "grunt test",
+    "test": "./node_modules/mocha/bin/mocha",
     "start": "node ./"
   },
   "dependencies": {
