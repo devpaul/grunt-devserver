@@ -1,4 +1,5 @@
 var request = require('supertest')
+  , path = require('path')
   , Server = require('../../lib/server.js')
   , Config = require('../../lib/Config.js')
 
@@ -7,6 +8,8 @@ describe("ServerTest", function() {
 
     beforeEach(function() {
         config = new Config()
+        config.folder = path.resolve(path.join(__dirname, "../assets"))
+        console.log(config)
     })
 
     describe("construction", function() {
@@ -74,24 +77,54 @@ describe("ServerTest", function() {
             server = Server(config)
         })
 
-        it("serves static content", function(done) {
+        it("serves folders", function(done) {
             request(server.app)
                 .get('/')
                 .expect(200, done)
         })
 
+        it("serves static content", function(done) {
+            request(server.app)
+                .get('/test.html')
+                .expect(200, done)
+        })
+
+        it("replies 404 for missing content", function(done) {
+            request(server.app)
+                .get('/missing.html')
+                .expect(404, done)
+        })
+
         it("adds CORS headers", function(done) {
             request(server.app)
-                .get('/')
+                .get('/test.html')
                 .expect('Access-Control-Allow-Origin', '*')
                 .end(done)
         })
 
         it("adds no-cache headers", function(done) {
             request(server.app)
-                .get('/')
+                .get('/test.html')
                 .expect('Cache-Control', 'no-cache')
                 .end(done)
+        })
+
+        it("replies 304 for cached content", function(done) {
+            var file = '/test.html'
+
+            request(server.app)
+                .get(file)
+                .expect(200, onResult)
+
+            function onResult(req, res) {
+                var etag = res.headers.etag
+
+                request(server.app)
+                    .get(file)
+                    .set('If-None-Match', etag)
+                    .expect(304, done)
+                var etag = res.headers.etag
+            }
         })
     })
 })
