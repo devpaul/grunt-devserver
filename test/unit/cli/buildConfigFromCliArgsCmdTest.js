@@ -1,5 +1,5 @@
-var buildConfigFromCliArgsCmd = require('../../lib/cli/buildConfigFromCliArgsCmd.js')
-  , Config = require('../../lib/Config.js')
+var buildConfigFromCliArgsCmd = require('../../../lib/cli/buildConfigFromCliArgsCmd.js')
+  , Config = require('../../../lib/Config.js')
 
 describe("buildConfigFromCliArgsCmdTest", function() {
     it("defaults the server port when one is not provided", function() {

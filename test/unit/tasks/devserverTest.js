@@ -1,6 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
-  , Server = require('../../lib/Server.js')
-  , Config = require('../../lib/Config.js')
+  , Server = require('../../../lib/Server.js')
+  , Config = require('../../../lib/Config.js')
 
 describe("devserverTest", function() {
     var devserver, ServerSpy, startServerStub, gruntStub
@@ -16,7 +16,7 @@ describe("devserverTest", function() {
 
     function mockDependenciesForUnitUnderTest() {
         var options = { requires : { '../lib/Server.js' : createMockServer() } }
-        devserver = SandboxedModule.require('../../tasks/devserver', options)
+        devserver = SandboxedModule.require('../../../tasks/devserver', options)
     }
 
     function createMockServer() {

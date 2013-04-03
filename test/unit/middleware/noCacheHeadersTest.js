@@ -1,4 +1,4 @@
-var noCacheHeaders = require('../../lib/middleware/noCacheHeaders.js')
+var noCacheHeaders = require('../../../lib/middleware/noCacheHeaders.js')
 
 describe("noCacheHeadersTest", function() {
     var result, next

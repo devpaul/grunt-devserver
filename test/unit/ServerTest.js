@@ -1,6 +1,6 @@
 var request = require('supertest')
-  , Server = require('../lib/Server.js')
-  , Config = require('../lib/Config.js')
+  , Server = require('../../lib/server.js')
+  , Config = require('../../lib/Config.js')
 
 describe("ServerTest", function() {
     var config

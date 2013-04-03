@@ -1,4 +1,4 @@
-var Config = require('../lib/Config.js')
+var Config = require('../../lib/Config.js')
 
 describe("ConfigTest", function() {
     describe("construction", function() {

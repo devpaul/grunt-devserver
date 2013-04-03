@@ -1,4 +1,4 @@
-var corsSupport = require('../../lib/middleware/corsSupport.js')
+var corsSupport = require('../../../lib/middleware/corsSupport.js')
 
 describe("corsSupportTest", function() {
     var result, next
