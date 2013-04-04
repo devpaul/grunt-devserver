@@ -14,6 +14,7 @@ module.exports = function(grunt) {
     function getDevServerConfig() {
         return { port : 4321
                , base : '.'
+               , cache : 'no-store'
                }
     }
 
