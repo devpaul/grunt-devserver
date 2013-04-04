@@ -9,7 +9,6 @@ describe('ServerTest', function() {
     beforeEach(function() {
         config = new Config()
         config.folder = path.resolve(path.join(__dirname, '../assets'))
-        console.log(config)
     })
 
     describe('construction', function() {
@@ -104,10 +103,7 @@ describe('ServerTest', function() {
         })
 
         it('adds no-cache headers', function(done) {
-            request(server.app)
-                .get('/test.html')
-                .expect('Cache-Control', 'no-cache')
-                .end(done)
+            assertExpectedCacheHeaders(server, Config.DEFAULT_CACHE_CONTROL, done)
         })
 
         it('replies 304 for cached content', function(done) {
@@ -127,4 +123,18 @@ describe('ServerTest', function() {
             }
         })
     })
+
+    describe('custom caching method', function() {
+        it('supplies custom cache headers', function(done) {
+            config.cacheControl = 'no-store'
+            assertExpectedCacheHeaders(new Server(config), config.cacheControl, done)
+        })
+    })
+
+    function assertExpectedCacheHeaders(server, expected, done) {
+        request(server.app)
+            .get('/test.html')
+            .expect('Cache-Control', expected)
+            .end(done)
+    }
 })
