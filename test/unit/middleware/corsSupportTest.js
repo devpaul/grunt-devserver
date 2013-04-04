@@ -4,9 +4,11 @@ describe('corsSupportTest', function() {
     var result, next
 
     beforeEach(function() {
+        var handler = corsSupport()
         result = { setHeader : sinon.spy() }
         next = sinon.spy()
-        corsSupport(undefined, result, next)
+
+        handler(undefined, result, next)
     })
 
     it('sets a CORS header on the result', function() {
