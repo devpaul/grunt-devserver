@@ -1,6 +1,5 @@
 {
   "node": true,
-  "browser": true,
   "es5": true,
   "esnext": true,
   "bitwise": true,
@@ -24,9 +23,13 @@
   "maxparams": 5,
   "asi": true,
   "white": false,
-  "globals": { "angular": false
-             , "define": true
-             , "Modernizr": true
-             , "FB": true
+  "expr": true,
+  "globals": { "expect": false
+             , "describe": false
+             , "it": false
+             , "beforeEach": false
+             , "afterEach": false
+             , "sinon": false
+             , "chai": false
              }
 }

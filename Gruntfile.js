@@ -11,10 +11,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['mochaTest'])
     grunt.initConfig(config)
 
-    function potato() {
-        for(;;) {}
-    }
-
     function getDevServerConfig() {
         return { port : 4321
                , base : '.'

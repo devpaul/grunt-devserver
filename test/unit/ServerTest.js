@@ -3,22 +3,23 @@ var request = require('supertest')
   , Server = require('../../lib/server.js')
   , Config = require('../../lib/Config.js')
 
-describe("ServerTest", function() {
+describe('ServerTest', function() {
     var config
 
     beforeEach(function() {
         config = new Config()
-        config.folder = path.resolve(path.join(__dirname, "../assets"))
+        config.folder = path.resolve(path.join(__dirname, '../assets'))
         console.log(config)
     })
 
-    describe("construction", function() {
-        it("is propertly constructed", function() {
+    describe('construction', function() {
+        it('is propertly constructed', function() {
             var server = new Server(config)
             assertProperlyConstructed(server, config)
         })
 
-        it("can be constructed functionally", function() {
+        it('can be constructed functionally', function() {
+            /* jshint newcap: false */
             var server = Server(config)
             assertProperlyConstructed(server, config)
         })
@@ -32,8 +33,8 @@ describe("ServerTest", function() {
             expect(server.config).to.deep.equal(config)
         }
     })
-    
-    describe("start", function() {
+
+    describe('start', function() {
         var server, listenStub
 
         beforeEach(function() {
@@ -45,14 +46,14 @@ describe("ServerTest", function() {
             listenStub.restore()
         })
 
-        it("starts a server on the configured port", function() {
+        it('starts a server on the configured port', function() {
             server.start()
             expect(listenStub.calledOnce).to.be.true
             expect(listenStub.firstCall.args[0]).to.be.equal(config.port)
         })
     })
 
-    describe("stop", function() {
+    describe('stop', function() {
         var server, closeStub
 
         beforeEach(function() {
@@ -64,52 +65,52 @@ describe("ServerTest", function() {
             closeStub.restore()
         })
 
-        it("stops a server", function() {
+        it('stops a server', function() {
             server.stop()
             expect(closeStub.calledOnce).to.be.true
         })
     })
 
-    describe("serves content", function() {
+    describe('serves content', function() {
         var server
 
         beforeEach(function() {
-            server = Server(config)
+            server = new Server(config)
         })
 
-        it("serves folders", function(done) {
+        it('serves folders', function(done) {
             request(server.app)
                 .get('/')
                 .expect(200, done)
         })
 
-        it("serves static content", function(done) {
+        it('serves static content', function(done) {
             request(server.app)
                 .get('/test.html')
                 .expect(200, done)
         })
 
-        it("replies 404 for missing content", function(done) {
+        it('replies 404 for missing content', function(done) {
             request(server.app)
                 .get('/missing.html')
                 .expect(404, done)
         })
 
-        it("adds CORS headers", function(done) {
+        it('adds CORS headers', function(done) {
             request(server.app)
                 .get('/test.html')
                 .expect('Access-Control-Allow-Origin', '*')
                 .end(done)
         })
 
-        it("adds no-cache headers", function(done) {
+        it('adds no-cache headers', function(done) {
             request(server.app)
                 .get('/test.html')
                 .expect('Cache-Control', 'no-cache')
                 .end(done)
         })
 
-        it("replies 304 for cached content", function(done) {
+        it('replies 304 for cached content', function(done) {
             var file = '/test.html'
 
             request(server.app)
@@ -123,7 +124,6 @@ describe("ServerTest", function() {
                     .get(file)
                     .set('If-None-Match', etag)
                     .expect(304, done)
-                var etag = res.headers.etag
             }
         })
     })

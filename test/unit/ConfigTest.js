@@ -1,18 +1,19 @@
 var Config = require('../../lib/Config.js')
 
-describe("ConfigTest", function() {
-    describe("construction", function() {
-        it("is constructed correctly with defaults", function() {
+describe('ConfigTest', function() {
+    describe('construction', function() {
+        it('is constructed correctly with defaults', function() {
             var config = new Config()
             assertProperlyConstructed(config)
         })
 
-        it("is prototyped correctly", function() {
+        it('is prototyped correctly', function() {
             expect(Config.DEFAULT_PORT).to.be.equal(8888)
             expect(Config.DEFAULT_FOLDER).to.be.equal(process.cwd())
         })
 
-        it("supports functional construction", function() {
+        it('supports functional construction', function() {
+            /* jshint newcap: false */
             var config = Config()
             assertProperlyConstructed(config);
         })

@@ -2,7 +2,7 @@ var SandboxedModule = require('sandboxed-module')
   , Server = require('../../../lib/Server.js')
   , Config = require('../../../lib/Config.js')
 
-describe("startFromConsoleCmdTest", function() {
+describe('startFromConsoleCmdTest', function() {
     var startFromConsoleCmd, ServerSpy, startServerStub
 
     beforeEach(function() {
@@ -26,11 +26,11 @@ describe("startFromConsoleCmdTest", function() {
         return ServerSpy
     }
 
-    it("creates a new server", function() {
+    it('creates a new server', function() {
         expect(ServerSpy.calledOnce).to.be.true
     })
 
-    it("automatically starts the server on the configured port", function() {
+    it('automatically starts the server on the configured port', function() {
         var server = ServerSpy.thisValues[0]
         expect(server).to.be.defined
         expect(startServerStub.calledOnce).to.be.true
