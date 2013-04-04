@@ -37,6 +37,9 @@
   "engine": {
     "node": ">=0.8"
   },
+  "bin": {
+    "devserver": "./bin/devserver"
+  },
   "keywords": [
     "grunt",
     "gruntplugin",

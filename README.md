@@ -3,13 +3,13 @@ grunt-devserver provides a simple way to quickly get a http development server s
 * no caching content
 * CORS headers for cross-domain requests
 * logs requests to console
-* run from command line or Grunt 0.4.x
+* install globally and run from command line or Grunt 0.4.x
 
 As a developer I needed a lightweight way to serve up client-side applications and content in isolation from a larger
 server application.  Something that supported a rapid workflow and integrated with my tools.
 
 ## Installation
-Install it from the command line
+Install it from the command line into your project
 ```
 npm install grunt-devserver --save-dev
 ```
@@ -19,9 +19,16 @@ Or add it to your package.json devDependicies
     "grunt-devserver": "*"
 }
 ```
+Or install it globally
+```
+npm install grunt-devserver -g
+```
 
 ## Usage
 ### From the Command Line
+Once grunt-devserver has been installed globally you can run it from any folder by typing ```devserver```
+
+Command line options:
 ```
 -p, --port (port number) listen on this port
 -f, --folder (full path to a folder) serves this folder
@@ -55,9 +62,9 @@ grunt devserver
 ```
 
 ## Future
-* globally install & grunt-devserver-cli
 * serve up multiple folders
 * proxy service
+* https support
 
 ## Logos and Tools
 Logos and tools are property of their respective owners.
