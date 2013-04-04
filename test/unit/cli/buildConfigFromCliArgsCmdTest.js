@@ -29,4 +29,18 @@ describe('buildConfigFromCliArgsCmdTest', function() {
 
         expect(config.folder).to.be.equal(expected)
     })
+
+    it('uses the cache method from cli', function() {
+        var expected = 'potato'
+          , args = ('--cache ' + expected).split(' ')
+          , config = buildConfigFromCliArgsCmd(args)
+
+        expect(config.cacheControl).to.be.equal(expected)
+    })
+
+    it('defaults the cache method when one is not provided', function() {
+        var config = buildConfigFromCliArgsCmd()
+
+        expect(config.cacheControl).to.be.equal(Config.DEFAULT_CACHE_CONTROL)
+    })
 })
