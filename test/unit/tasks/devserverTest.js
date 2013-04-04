@@ -96,5 +96,17 @@ describe('devserverTest', function() {
               , config = devserver.buildConfig(grunt)
             expect(config.folder).to.be.equal(expected)
         })
+
+        it('defaults to cache method when one is not provided', function() {
+            var config = devserver.buildConfig(grunt)
+            expect(config.cacheControl).to.be.equal(Config.DEFAULT_CACHE_CONTROL)
+        })
+
+        it('configures the cache method from grunt', function() {
+            var expected = configMap['devserver.cache'] = 'potato'
+              , config = devserver.buildConfig(grunt)
+
+            expect(config.cacheControl).to.be.equal(expected)
+        })
     })
 })

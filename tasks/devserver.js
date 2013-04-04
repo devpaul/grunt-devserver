@@ -18,6 +18,7 @@ function buildConfig(grunt) {
     var config = new Config()
     config.port = grunt.config('devserver.port') || config.port
     config.folder = grunt.config('devserver.base') || config.folder
+    config.cacheControl = grunt.config('devserver.cache') || config.cacheControl
     return config
 }
 
