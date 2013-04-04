@@ -4,13 +4,16 @@ module.exports = function(grunt) {
     var config = { devserver: getDevServerConfig()
                  , mochaTest: getMochaTestConfig()
                  , mochaTestConfig: getMochaTestConfigConfig()
+                 , jshint: getJshintConfig()
                  }
 
     loadTasks()
     grunt.registerTask('test', ['mochaTest'])
     grunt.initConfig(config)
 
-
+    function potato() {
+        for(;;) {}
+    }
 
     function getDevServerConfig() {
         return { port : 4321
@@ -31,8 +34,15 @@ module.exports = function(grunt) {
                }
     }
 
+    function getJshintConfig() {
+        return { options: { jshintrc: '.jshintrc' }
+               , all: { src: ['Gruntfile.js', 'lib/**/*.js', 'test/unit/**/*.js'] }
+               }
+    }
+
     function loadTasks() {
         grunt.loadTasks(path.resolve('tasks'))
+        grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test')
     }
 }

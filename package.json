@@ -28,7 +28,8 @@
     "sinon-chai": "*",
     "supertest": "*",
     "sandboxed-module": "*",
-    "grunt-mocha-test": "~0.2.0"
+    "grunt-mocha-test": "~0.2.0",
+    "grunt-contrib-jshint": "~0.3.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
