@@ -1,6 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
   , Server = require('../../../lib/Server.js')
-  , Config = require('../../../lib/Config.js')
+  , HttpConfig = require('../../../lib/model/HttpConfig.js')
 
 describe('devserverTest', function() {
     var devserver, ServerSpy, startServerStub, gruntStub
@@ -59,7 +59,7 @@ describe('devserverTest', function() {
             var server = ServerSpy.thisValues[0]
             expect(server).to.be.defined
             expect(startServerStub.calledOnce).to.be.true
-            expect(server.config.port).to.be.equal(Config.DEFAULT_PORT)
+            expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
         })
     })
 
@@ -77,7 +77,7 @@ describe('devserverTest', function() {
 
         it('defaults the server port when one is not provided', function() {
             var config = devserver.buildConfig(grunt)
-            expect(config.port).to.be.equal(Config.DEFAULT_PORT)
+            expect(config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
         })
 
         it('configures the server port number from grunt', function() {
@@ -88,7 +88,7 @@ describe('devserverTest', function() {
 
         it('defaults the folder when one is not provided', function() {
             var config = devserver.buildConfig(grunt)
-            expect(config.folder).to.be.equal(Config.DEFAULT_FOLDER)
+            expect(config.folder).to.be.equal(HttpConfig.DEFAULT_FOLDER)
         })
 
         it('configures the folder from grunt', function() {
@@ -99,7 +99,7 @@ describe('devserverTest', function() {
 
         it('defaults to cache method when one is not provided', function() {
             var config = devserver.buildConfig(grunt)
-            expect(config.cacheControl).to.be.equal(Config.DEFAULT_CACHE_CONTROL)
+            expect(config.cacheControl).to.be.equal(HttpConfig.DEFAULT_CACHE_CONTROL)
         })
 
         it('configures the cache method from grunt', function() {

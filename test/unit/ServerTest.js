@@ -1,13 +1,13 @@
 var request = require('supertest')
   , path = require('path')
   , Server = require('../../lib/server.js')
-  , Config = require('../../lib/Config.js')
+  , HttpConfig = require('../../lib/model/HttpConfig.js')
 
 describe('ServerTest', function() {
     var config
 
     beforeEach(function() {
-        config = new Config()
+        config = new HttpConfig()
         config.folder = path.resolve(path.join(__dirname, '../assets'))
     })
 
@@ -103,7 +103,7 @@ describe('ServerTest', function() {
         })
 
         it('adds no-cache headers', function(done) {
-            assertExpectedCacheHeaders(server, Config.DEFAULT_CACHE_CONTROL, done)
+            assertExpectedCacheHeaders(server, HttpConfig.DEFAULT_CACHE_CONTROL, done)
         })
 
         it('replies 304 for cached content', function(done) {

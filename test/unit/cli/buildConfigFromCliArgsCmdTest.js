@@ -1,11 +1,11 @@
 var buildConfigFromCliArgsCmd = require('../../../lib/cli/buildConfigFromCliArgsCmd.js')
-  , Config = require('../../../lib/Config.js')
+  , HttpConfig = require('../../../lib/model/HttpConfig.js')
 
 describe('buildConfigFromCliArgsCmdTest', function() {
     it('defaults the server port when one is not provided', function() {
         var config = buildConfigFromCliArgsCmd()
 
-        expect(config.port).to.be.equal(Config.DEFAULT_PORT)
+        expect(config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
     })
 
     it('uses the server port from cli', function() {
@@ -19,7 +19,7 @@ describe('buildConfigFromCliArgsCmdTest', function() {
     it('defaults the folder when one is not provided', function() {
         var config = buildConfigFromCliArgsCmd()
 
-        expect(config.folder).to.be.equal(Config.DEFAULT_FOLDER)
+        expect(config.folder).to.be.equal(HttpConfig.DEFAULT_FOLDER)
     })
 
     it('uses the folder from cli', function() {
@@ -41,6 +41,6 @@ describe('buildConfigFromCliArgsCmdTest', function() {
     it('defaults the cache method when one is not provided', function() {
         var config = buildConfigFromCliArgsCmd()
 
-        expect(config.cacheControl).to.be.equal(Config.DEFAULT_CACHE_CONTROL)
+        expect(config.cacheControl).to.be.equal(HttpConfig.DEFAULT_CACHE_CONTROL)
     })
 })

@@ -1,6 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
   , Server = require('../../../lib/Server.js')
-  , Config = require('../../../lib/Config.js')
+  , HttpConfig = require('../../../lib/model/HttpConfig.js')
 
 describe('startFromConsoleCmdTest', function() {
     var startFromConsoleCmd, ServerSpy, startServerStub
@@ -34,6 +34,6 @@ describe('startFromConsoleCmdTest', function() {
         var server = ServerSpy.thisValues[0]
         expect(server).to.be.defined
         expect(startServerStub.calledOnce).to.be.true
-        expect(server.config.port).to.be.equal(Config.DEFAULT_PORT)
+        expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
     })
 })
