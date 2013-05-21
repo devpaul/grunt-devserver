@@ -1,54 +1,80 @@
 var buildConfigFromOptions = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
   , HttpConfig = require('../../../lib/model/HttpConfig.js')
+  , HttpsConfig = require('../../../lib/model/HttpsConfig.js')
   , serverTypes = require('../../../lib/model/data/serverTypes.json')
 
 describe('buildConfig', function() {
     function assertConfigValueSet(configKey, expected, options) {
         var config = buildConfigFromOptions(options || {})
-        expect(config[configKey]).to.be.equal(expected)
+        expect(config[configKey]).to.deep.equal(expected)
         return config
     }
-
-    it('defaults the server port when one is not provided', function() {
-        assertConfigValueSet('port', HttpConfig.DEFAULT_PORT)
-    })
-
-    it('configures the server port number from grunt', function() {
-        var expected = 2468
-        assertConfigValueSet('port', expected, { port : expected })
-    })
-
-    it('defaults the folder when one is not provided', function() {
-        assertConfigValueSet('folder', HttpConfig.DEFAULT_FOLDER)
-    })
-
-    it('configures the folder from grunt', function() {
-        var expected = '../'
-        assertConfigValueSet('folder', expected, { base : expected})
-    })
-
-    it('defaults to cache method when one is not provided', function() {
-        assertConfigValueSet('cacheControl', HttpConfig.DEFAULT_CACHE_CONTROL)
-    })
-
-    it('configures the cache method from grunt', function() {
-        var expected = 'potato'
-        assertConfigValueSet('cacheControl', expected, { cache : expected})
-    })
 
     it('defaults to HTTPConfig when no type is declared', function() {
         assertConfigValueSet('type', serverTypes.HTTP)
     })
 
-    it('recognizes the http server type', function() {
-        var expected = serverTypes.HTTP
-
-        assertConfigValueSet('type', expected)
+    it('uses provided options for https', function() {
+        var expected = {}
+          , options = { type : serverTypes.HTTPS
+                      , config : expected
+                      }
+        assertConfigValueSet('options', expected, options)
     })
 
-    it('recognizes the https server type', function() {
-        var expected = serverTypes.HTTPS
+    it('builds a default set of https options', function() {
+        var expected = {}
+          , options = { type : serverTypes.HTTPS }
+        assertConfigValueSet('options', expected, options)
+    })
 
-        assertConfigValueSet('type', expected, { type : expected })
+    describe('commonConfig tests', function() {
+        var TYPES = [ [HttpConfig, serverTypes.HTTP]
+                    , [HttpsConfig, serverTypes.HTTPS]
+                    ]
+
+        TYPES.forEach(function(value) {
+            var clazz = value[0]
+              , type = value[1]
+
+            it(type + ' uses default server port', function() {
+                var options = { type : type }
+                assertConfigValueSet('port', clazz.DEFAULT_PORT, options)
+            })
+
+            it(type + ' overrides the server port from options', function() {
+                var expected = 2468
+                  , options = { type : type
+                              , port : expected
+                              }
+                assertConfigValueSet('port', expected, options)
+            })
+
+            it(type + ' uses default folder', function() {
+                var options = { type : type }
+                assertConfigValueSet('folder', clazz.DEFAULT_FOLDER, options)
+            })
+
+            it(type + ' overrides the folder from options', function() {
+                var expected = '../'
+                  , options = { type : type
+                              , base : expected
+                              }
+                assertConfigValueSet('folder', expected, options)
+            })
+
+            it(type + ' uses default cache method', function() {
+                var options = { type : type }
+                assertConfigValueSet('cacheControl', clazz.DEFAULT_CACHE_CONTROL, options)
+            })
+
+            it(type + ' overrides the cache method from options', function() {
+                var expected = 'potato'
+                  , options = { type : type
+                              , cache : expected
+                              }
+                assertConfigValueSet('cacheControl', expected, options)
+            })
+        })
     })
 })
