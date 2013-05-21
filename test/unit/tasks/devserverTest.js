@@ -1,12 +1,16 @@
 var SandboxedModule = require('sandboxed-module')
   , Server = require('../../../lib/Server.js')
   , HttpConfig = require('../../../lib/model/HttpConfig.js')
+  , serverTypes = require('../../../lib/model/data/serverTypes.json')
+  , path = require('path')
 
 describe('devserverTest', function() {
-    var devserver, ServerSpy, startServerStub, gruntStub
+    var mockOptions = { test : 'test' }
+      , devserver, ServerSpy, startServerStub, gruntStub, taskContext
 
     beforeEach(function() {
         gruntStub = createGruntStub()
+        taskContext = createTaskContext()
         mockDependenciesForUnitUnderTest()
     })
 
@@ -26,8 +30,12 @@ describe('devserverTest', function() {
     }
 
     function createGruntStub() {
-        return { registerTask : sinon.stub()
-               , config : sinon.stub()
+        return { registerTask : sinon.stub() }
+    }
+
+    function createTaskContext() {
+        return { options : sinon.stub.returns(mockOptions)
+               , async : sinon.stub()
                }
     }
 
@@ -38,17 +46,17 @@ describe('devserverTest', function() {
     })
 
     describe('devServerTask', function() {
-        var asyncStub, devserverTask
+        var devserverTask
 
         beforeEach(function() {
-            asyncStub = { async : sinon.stub() }
             devserver(gruntStub)
             devserverTask = gruntStub.registerTask.firstCall.args[2]
-            devserverTask.call(asyncStub)
+            devserverTask.call(taskContext)
+            sinon.stub(devserver, 'buildConfig')
         })
 
         it('is an async task', function() {
-            expect(asyncStub.async.calledOnce).to.be.true
+            expect(taskContext.async.calledOnce).to.be.true
         })
 
         it('creates a new server', function() {
@@ -61,52 +69,47 @@ describe('devserverTest', function() {
             expect(startServerStub.calledOnce).to.be.true
             expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
         })
+
+        it('hands off options to build Config', function() {
+
+        })
     })
 
     describe('buildConfig', function() {
-        var configMap, grunt
-
-        beforeEach(function() {
-            grunt = { config : getConfig }
-            configMap = {}
+        it('defaults the server port when one is not provided', function() {
+            assertConfigValueSet('port', HttpConfig.DEFAULT_PORT)
         })
 
-        function getConfig(name) {
-            return configMap[name]
+        function assertConfigValueSet(configKey, expected, options) {
+            var config = devserver.buildConfig(options || {})
+            expect(config[configKey]).to.be.equal(expected)
         }
 
-        it('defaults the server port when one is not provided', function() {
-            var config = devserver.buildConfig(grunt)
-            expect(config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
-        })
-
         it('configures the server port number from grunt', function() {
-            var expected = configMap['devserver.port'] = 2468
-              , config = devserver.buildConfig(grunt)
-            expect(config.port).to.be.equal(expected)
+            var expected = 2468
+            assertConfigValueSet('port', expected, { port : expected })
         })
 
         it('defaults the folder when one is not provided', function() {
-            var config = devserver.buildConfig(grunt)
-            expect(config.folder).to.be.equal(HttpConfig.DEFAULT_FOLDER)
+            assertConfigValueSet('folder', HttpConfig.DEFAULT_FOLDER)
         })
 
         it('configures the folder from grunt', function() {
-            var expected = configMap['devserver.base'] = '../'
-              , config = devserver.buildConfig(grunt)
-            expect(config.folder).to.be.equal(expected)
+            var expected = '../'
+            assertConfigValueSet('folder', expected, { base : expected})
         })
 
         it('defaults to cache method when one is not provided', function() {
-            var config = devserver.buildConfig(grunt)
-            expect(config.cacheControl).to.be.equal(HttpConfig.DEFAULT_CACHE_CONTROL)
+            assertConfigValueSet('cacheControl', HttpConfig.DEFAULT_CACHE_CONTROL)
         })
 
         it('configures the cache method from grunt', function() {
-            var expected = configMap['devserver.cache'] = 'potato'
-              , config = devserver.buildConfig(grunt)
+            var expected = 'potato'
+            assertConfigValueSet('cacheControl', expected, { cache : expected})
+        })
 
-            expect(config.cacheControl).to.be.equal(expected)
+        it('defaults to HTTPConfig when no type is declared', function() {
+            assertConfigValueSet('type', serverTypes.HTTP)
         })
     })
 })

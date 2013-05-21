@@ -12,9 +12,10 @@ module.exports = function(grunt) {
     grunt.initConfig(config)
 
     function getDevServerConfig() {
-        return { port : 4321
-               , base : '.'
-               , cache : 'no-store'
+        return { options: { port : 4321
+                          , base : '.'
+                          , cache : 'no-store'
+                          }
                }
     }
 

@@ -5,7 +5,7 @@ function devserver(grunt) {
     grunt.registerTask('devserver', 'Start a static web server.', devServerTask);
 
     function devServerTask() {
-        var config = buildConfig(grunt)
+        var config = buildConfig(this.options())
           , server = new Server(config)
 
         this.async()
@@ -14,11 +14,11 @@ function devserver(grunt) {
     }
 }
 
-function buildConfig(grunt) {
+function buildConfig(options) {
     var config = new HttpConfig()
-    config.port = grunt.config('devserver.port') || config.port
-    config.folder = grunt.config('devserver.base') || config.folder
-    config.cacheControl = grunt.config('devserver.cache') || config.cacheControl
+    config.port = options.port || config.port
+    config.folder = options.base || config.folder
+    config.cacheControl = options.cache || config.cacheControl
     return config
 }
 
