@@ -12,9 +12,10 @@ module.exports = function(grunt) {
     grunt.initConfig(config)
 
     function getDevServerConfig() {
-        return { options: { port : 4321
-                          , base : '.'
-                          , cache : 'no-store'
+        return { options: { type : 'https'     // the server protocol (default http)
+                          , port : 8888        // the server port to listen on
+                          , base : '.'         // the base folder to serve files
+                          , cache : 'no-store' // http caching method (defaults to 'no-cache')
                           }
                }
     }
@@ -27,6 +28,7 @@ module.exports = function(grunt) {
         return { unit: { options: { ui: 'bdd'
                                   , reporter: 'spec'
                                   , require: 'test/unit/common'
+                                  , noColors: true
                                   }
                        }
                }
