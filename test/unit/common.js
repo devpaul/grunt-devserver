@@ -1,7 +1,11 @@
-var sinonChai = require('sinon-chai')
+var chai = require('chai')
+  , sinon = require('sinon')
+  , sinonChai = require('sinon-chai')
+  , chaiAsPromised = require('chai-as-promised')
 
-global.sinon = require('sinon')
-global.chai = require('chai')
-global.expect = require('chai').expect
-
+chai.use(chaiAsPromised)
 chai.use(sinonChai)
+
+global.sinon = sinon
+global.chai = chai
+global.expect = require('chai').expect

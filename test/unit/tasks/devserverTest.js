@@ -64,19 +64,18 @@ describe('devserverTest', function() {
         })
 
         it('creates a new server', function(done) {
-            promise.then(function() {
-                expect(ServerSpy.calledOnce).to.be.true
-                done()
-            })
+            expect(promise.then(function() { expect(ServerSpy.calledOnce).to.be.true }))
+                .to.be.fulfilled.notify(done)
         })
 
         it('automatically starts the server on the configured port', function(done) {
-            promise.then(function() {
+            var assertPromise = promise.then(function() {
                 expect(ServerSpy.called).to.be.true
                 expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT_PORT)
                 expect(ServerSpy.startServerStub.calledOnce).to.be.true
-                done()
             })
+
+            expect(assertPromise).notify(done)
         })
 
         it('hands off options to build Config', function() {
