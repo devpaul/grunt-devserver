@@ -1,23 +1,17 @@
 var SandboxedModule = require('sandboxed-module')
   , HttpConfig = require('../../../lib/model/HttpConfig.js')
-  , Server = require('../../../lib/controller/Server.js')
   , buildConfigFromOptionsCmd = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
 
 describe('devserverTest', function() {
-    var mockOptions = new HttpConfig()
-      , devserver, ServerSpy, startServerStub, gruntStub, buildConfigSpy
+    var devserver, ServerSpy, gruntStub, buildConfigSpy
 
     beforeEach(function() {
         gruntStub = createGruntStub()
         mockDependenciesForUnitUnderTest()
     })
 
-    afterEach(function() {
-        startServerStub.restore()
-    })
-
     function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../lib/controller/Server.js' : createMockServer()
+        var options = { requires : { '../lib/controller/Server.js' : createMockServerClass()
                                    , '../lib/commands/buildConfigFromOptionsCmd.js' : createBuildConfigSpy()
                                    }
                       }
@@ -29,9 +23,10 @@ describe('devserverTest', function() {
         return buildConfigSpy
     }
 
-    function createMockServer() {
-        ServerSpy = sinon.spy(Server)
-        startServerStub = sinon.stub(Server.prototype, 'start')
+    function createMockServerClass() {
+        var startServerStub = sinon.stub()
+        ServerSpy = sinon.stub().returns({ start: startServerStub })
+        ServerSpy.startServerStub = startServerStub
         return ServerSpy
     }
 
@@ -46,19 +41,20 @@ describe('devserverTest', function() {
     })
 
     describe('devServerTask', function() {
-        var devserverTask, taskContext
+        var options, devserverTask, taskContext, promise
 
         beforeEach(function() {
+            options = { }
             taskContext = createTaskContext()
             devserver(gruntStub)
             devserverTask = gruntStub.registerTask.firstCall.args[2]
-            devserverTask.call(taskContext)
+            promise = devserverTask.call(taskContext)
         })
 
         function createTaskContext() {
-            var options = sinon.stub()
-            options.returns(mockOptions)
-            return { options : options
+            var gruntOptions = sinon.stub()
+            gruntOptions.returns(options)
+            return { options : gruntOptions
                    , async : sinon.stub()
                    }
         }
@@ -67,20 +63,25 @@ describe('devserverTest', function() {
             expect(taskContext.async.calledOnce).to.be.true
         })
 
-        it('creates a new server', function() {
-            expect(ServerSpy.calledOnce).to.be.true
+        it('creates a new server', function(done) {
+            promise.then(function() {
+                expect(ServerSpy.calledOnce).to.be.true
+                done()
+            })
         })
 
-        it('automatically starts the server on the configured port', function() {
-            var server = ServerSpy.thisValues[0]
-            expect(server).to.exist
-            expect(startServerStub.calledOnce).to.be.true
-            expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
+        it('automatically starts the server on the configured port', function(done) {
+            promise.then(function() {
+                expect(ServerSpy.called).to.be.true
+                expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT_PORT)
+                expect(ServerSpy.startServerStub.calledOnce).to.be.true
+                done()
+            })
         })
 
         it('hands off options to build Config', function() {
             expect(buildConfigSpy.calledOnce).to.be.true;
-            expect(buildConfigSpy.firstCall.args[0]).to.deep.equal(mockOptions)
+            expect(buildConfigSpy.firstCall.args[0]).to.deep.equal(options)
         })
     })
 })

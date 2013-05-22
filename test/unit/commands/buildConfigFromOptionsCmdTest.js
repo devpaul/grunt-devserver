@@ -5,27 +5,45 @@ var buildConfigFromOptions = require('../../../lib/commands/buildConfigFromOptio
 
 describe('buildConfig', function() {
     function assertConfigValueSet(configKey, expected, options) {
-        var config = buildConfigFromOptions(options || {})
-        expect(config[configKey]).to.deep.equal(expected)
-        return config
+        var promise = buildConfigFromOptions(options || {})
+        return promise.then(function(config) {
+            expect(config[configKey]).to.deep.equal(expected)
+        })
     }
 
-    it('defaults to HTTPConfig when no type is declared', function() {
-        assertConfigValueSet('type', serverTypes.HTTP)
+    function completeTestOnPromise(promise, done) {
+        promise.then(function() {
+            done()
+        }, function(err) {
+            done(err)
+        })
+    }
+
+    it('defaults to HTTPConfig when no type is declared', function(done) {
+        var promise = assertConfigValueSet('type', serverTypes.HTTP)
+        completeTestOnPromise(promise, done)
     })
 
-    it('uses provided options for https', function() {
+    it('uses provided options for https', function(done) {
         var expected = {}
           , options = { type : serverTypes.HTTPS
-                      , config : expected
+                      , httpsOptions : expected
                       }
-        assertConfigValueSet('options', expected, options)
+          , promise = assertConfigValueSet('options', expected, options)
+        completeTestOnPromise(promise, done)
     })
 
-    it('builds a default set of https options', function() {
-        var expected = {}
-          , options = { type : serverTypes.HTTPS }
-        assertConfigValueSet('options', expected, options)
+    it('builds a default set of https options', function(done) {
+        var options = { type : serverTypes.HTTPS }
+          , promise = buildConfigFromOptions(options)
+
+        promise.then(function(config) {
+            expect(config).to.exist
+            expect(config.key).to.exist
+            expect(config.cert).to.exist
+            done()
+        })
+        completeTestOnPromise(promise, done)
     })
 
     describe('commonConfig tests', function() {
@@ -37,43 +55,58 @@ describe('buildConfig', function() {
             var clazz = value[0]
               , type = value[1]
 
-            it(type + ' uses default server port', function() {
-                var options = { type : type }
-                assertConfigValueSet('port', clazz.DEFAULT_PORT, options)
+            it(type + ' uses default server port', function(done) {
+                var options = { type : type
+                              , httpsOptions : {} // speeds up https case, ignored by http case
+                              }
+                  , promise = assertConfigValueSet('port', clazz.DEFAULT_PORT, options)
+                completeTestOnPromise(promise, done)
             })
 
-            it(type + ' overrides the server port from options', function() {
+            it(type + ' overrides the server port from options', function(done) {
                 var expected = 2468
                   , options = { type : type
                               , port : expected
+                              , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('port', expected, options)
+                  , promise = assertConfigValueSet('port', expected, options)
+                completeTestOnPromise(promise, done)
             })
 
-            it(type + ' uses default folder', function() {
-                var options = { type : type }
-                assertConfigValueSet('folder', clazz.DEFAULT_FOLDER, options)
+            it(type + ' uses default folder', function(done) {
+                var options = { type : type
+                              , httpsOptions : {} // speeds up https case, ignored by http case
+                              }
+                  , promise = assertConfigValueSet('folder', clazz.DEFAULT_FOLDER, options)
+                completeTestOnPromise(promise, done)
             })
 
-            it(type + ' overrides the folder from options', function() {
+            it(type + ' overrides the folder from options', function(done) {
                 var expected = '../'
                   , options = { type : type
                               , base : expected
+                              , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('folder', expected, options)
+                  , promise = assertConfigValueSet('folder', expected, options)
+                completeTestOnPromise(promise, done)
             })
 
-            it(type + ' uses default cache method', function() {
-                var options = { type : type }
-                assertConfigValueSet('cacheControl', clazz.DEFAULT_CACHE_CONTROL, options)
+            it(type + ' uses default cache method', function(done) {
+                var options = { type : type
+                              , httpsOptions : {} // speeds up https case, ignored by http case
+                              }
+                  , promise = assertConfigValueSet('cacheControl', clazz.DEFAULT_CACHE_CONTROL, options)
+                completeTestOnPromise(promise, done)
             })
 
-            it(type + ' overrides the cache method from options', function() {
+            it(type + ' overrides the cache method from options', function(done) {
                 var expected = 'potato'
                   , options = { type : type
                               , cache : expected
+                              , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('cacheControl', expected, options)
+                  , promise = assertConfigValueSet('cacheControl', expected, options)
+                completeTestOnPromise(promise, done)
             })
         })
     })

@@ -19,33 +19,39 @@ describe('createServerCmdTest', function() {
     })
 
     describe('create http server', function() {
+        var config
+
+        beforeEach(function() {
+            config = new HttpConfig()
+        })
+
         it('creates server when config.type is set to http', function() {
-            var config = new HttpConfig()
-              , server = createServerCmd(config)
+            var server = createServerCmd(config)
 
             expect(server).to.exist
             expect(server).to.be.an.instanceof(http.Server)
         })
 
         it('attaches middleware to request event', function() {
-            var config = new HttpConfig()
-
             assertMiddlewareHandledRequest(config);
         })
     })
 
     describe('create https server', function() {
+        var config
+
+        beforeEach(function() {
+            config = new HttpsConfig({})
+        })
+
         it('creates server when config.type is set to https', function() {
-            var config = new HttpsConfig()
-              , server = createServerCmd(config)
+            var server = createServerCmd(config)
 
             expect(server).to.exist
             expect(server).to.be.an.instanceof(https.Server)
         })
 
         it('attaches middleware to request event', function() {
-            var config = new HttpsConfig()
-
             assertMiddlewareHandledRequest(config)
         })
     })

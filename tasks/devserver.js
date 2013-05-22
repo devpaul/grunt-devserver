@@ -5,11 +5,14 @@ function devserver(grunt) {
     grunt.registerTask('devserver', 'Start a static web server.', devServerTask);
 
     function devServerTask() {
-        var config = buildConfigFromOptions(this.options())
-          , server = new Server(config)
+        var promise = buildConfigFromOptions(this.options())
 
         this.async()
+        return promise.then(onConfigAvailable)
+    }
 
+    function onConfigAvailable(config) {
+        var server = new Server(config)
         server.start()
     }
 }
