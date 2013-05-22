@@ -25,7 +25,7 @@ describe('HttpConfigTest', function() {
         })
 
         function assertProperlyConstructed(config) {
-            expect(config).to.be.defined
+            expect(config).to.exist
             expect(config).to.be.an.instanceof(Config)
             expect(config.type).to.be.equal(serverTypes.HTTPS)
             expect(config.port).to.be.equal(Config.DEFAULT_PORT)
