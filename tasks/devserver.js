@@ -1,4 +1,4 @@
-var Server = require('../lib/Server.js')
+var Server = require('../lib/controller/Server.js')
   , buildConfigFromOptions = require('../lib/commands/buildConfigFromOptionsCmd.js')
 
 function devserver(grunt) {

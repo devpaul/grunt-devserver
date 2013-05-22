@@ -1,5 +1,5 @@
 var SandboxedModule = require('sandboxed-module')
-  , Server = require('../../../lib/Server.js')
+  , Server = require('../../../lib/controller/Server.js')
   , HttpConfig = require('../../../lib/model/HttpConfig.js')
 
 describe('startFromConsoleCmdTest', function() {
@@ -16,7 +16,7 @@ describe('startFromConsoleCmdTest', function() {
 
     function mockDependenciesForUnitUnderTest() {
         var UNIT_UNDER_TEST_PATH = '../../../lib/cli/startFromConsoleCmd'
-          , options = { requires : { '../Server.js' : createMockServer() } }
+          , options = { requires : { '../controller/Server.js' : createMockServer() } }
         startFromConsoleCmd = SandboxedModule.require(UNIT_UNDER_TEST_PATH, options)
     }
 
@@ -32,7 +32,7 @@ describe('startFromConsoleCmdTest', function() {
 
     it('automatically starts the server on the configured port', function() {
         var server = ServerSpy.thisValues[0]
-        expect(server).to.be.defined
+        expect(server).to.exist
         expect(startServerStub.calledOnce).to.be.true
         expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
     })

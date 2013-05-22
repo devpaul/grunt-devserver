@@ -1,6 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
   , HttpConfig = require('../../../lib/model/HttpConfig.js')
-  , Server = require('../../../lib/Server.js')
+  , Server = require('../../../lib/controller/Server.js')
   , buildConfigFromOptionsCmd = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
 
 describe('devserverTest', function() {
@@ -17,7 +17,7 @@ describe('devserverTest', function() {
     })
 
     function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../lib/Server.js' : createMockServer()
+        var options = { requires : { '../lib/controller/Server.js' : createMockServer()
                                    , '../lib/commands/buildConfigFromOptionsCmd.js' : createBuildConfigSpy()
                                    }
                       }
@@ -73,7 +73,7 @@ describe('devserverTest', function() {
 
         it('automatically starts the server on the configured port', function() {
             var server = ServerSpy.thisValues[0]
-            expect(server).to.be.defined
+            expect(server).to.exist
             expect(startServerStub.calledOnce).to.be.true
             expect(server.config.port).to.be.equal(HttpConfig.DEFAULT_PORT)
         })
