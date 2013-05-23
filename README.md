@@ -1,5 +1,5 @@
 # Developer Web Server
-grunt-devserver provides a simple way to quickly get a http development server serving up your content with
+grunt-devserver provides a simple way to quickly get a development server serving up your content with
 
 * no caching content
 * CORS headers for cross-domain requests
@@ -66,9 +66,21 @@ and you're ready to go
 grunt devserver
 ```
 
+## Version Notes
+### 0.3.0
+ * added https support [\#2](https://github.com/devpaul/grunt-devserver/issues/2)
+ * conformed to the grunt options standard (breaking change)
+ * added type parameter
+
+### 0.2.2
+ * added cache control option [\#1](https://github.com/devpaul/grunt-devserver/issues/1)
+
 ## Future
-* serve up multiple folders
+* serve up multiple folders on a single server
+* file configuration with a .devserverrc file
+* start multiple servers using a grunt multiconfig or using a file config
 * proxy service
+* websocket server
 
 ## Logos and Tools
 Logos and tools are property of their respective owners.
