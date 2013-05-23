@@ -1,9 +1,7 @@
 var SandboxedModule = require('sandboxed-module')
-  , HttpConfig = require('../../../lib/model/HttpConfig.js')
-  , buildConfigFromOptionsCmd = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
 
 describe('devserverTest', function() {
-    var devserver, ServerSpy, gruntStub, buildConfigSpy
+    var devserver, gruntStub, startServerCmdSpy
 
     beforeEach(function() {
         gruntStub = createGruntStub()
@@ -11,23 +9,13 @@ describe('devserverTest', function() {
     })
 
     function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../lib/controller/Server.js' : createMockServerClass()
-                                   , '../lib/commands/buildConfigFromOptionsCmd.js' : createBuildConfigSpy()
-                                   }
-                      }
+        var options = { requires : { '../lib/commands/startServerCmd.js' : createStartServerCmdSpy() } }
         devserver = SandboxedModule.require('../../../tasks/devserver', options)
     }
 
-    function createBuildConfigSpy() {
-        buildConfigSpy = sinon.spy(buildConfigFromOptionsCmd)
-        return buildConfigSpy
-    }
-
-    function createMockServerClass() {
-        var startServerStub = sinon.stub()
-        ServerSpy = sinon.stub().returns({ start: startServerStub })
-        ServerSpy.startServerStub = startServerStub
-        return ServerSpy
+    function createStartServerCmdSpy() {
+        startServerCmdSpy = sinon.stub()
+        return startServerCmdSpy
     }
 
     function createGruntStub() {
@@ -63,24 +51,9 @@ describe('devserverTest', function() {
             expect(taskContext.async.calledOnce).to.be.true
         })
 
-        it('creates a new server', function(done) {
-            expect(promise.then(function() { expect(ServerSpy.calledOnce).to.be.true }))
-                .to.be.fulfilled.notify(done)
-        })
-
-        it('automatically starts the server on the configured port', function(done) {
-            var assertPromise = promise.then(function() {
-                expect(ServerSpy.called).to.be.true
-                expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT_PORT)
-                expect(ServerSpy.startServerStub.calledOnce).to.be.true
-            })
-
-            expect(assertPromise).notify(done)
-        })
-
-        it('hands off options to build Config', function() {
-            expect(buildConfigSpy.calledOnce).to.be.true;
-            expect(buildConfigSpy.firstCall.args[0]).to.deep.equal(options)
+        it('starts the server with the provided options', function() {
+            expect(startServerCmdSpy.calledOnce).to.be.true
+            expect(startServerCmdSpy.firstCall.args[0]).to.deep.equal(options)
         })
     })
 })
