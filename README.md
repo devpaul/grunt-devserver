@@ -72,7 +72,7 @@ grunt devserver
 ```
 
 ### From Intellij
-Tool integration is extremely important to me as a developer.  If you're using a Jetbrains IDE like IntelliJ or WebStorm
+As a developer tool integration is extremely important.  If you are using a Jetbrains IDE like IntelliJ or WebStorm
 here are instructions to start a devserver directly in your IDE  by adding an entry to your
 [External Tools][jbExternalTools]:
 
