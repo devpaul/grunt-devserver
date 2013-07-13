@@ -32,8 +32,11 @@ describe('loadCompleteOptionsCmdTest', function() {
           , options = { type: 'http'
                       , file: filename
                       }
-          , firstOption = { type: 'https' }
-          , expected = { type: 'https'
+          , firstOption = { type: 'https'
+                          , cache: 'no-cache'
+                          }
+          , expected = { type: 'http'
+                       , cache: 'no-cache'
                        , file: filename
                        }
           , files = {}
@@ -54,9 +57,9 @@ describe('loadCompleteOptionsCmdTest', function() {
                            , file: secondFilename
                            }
           , secondOptions = { cacheControl: 'no-cache' }
-          , expected = { type: 'https'
+          , expected = { type: 'http'
                        , cacheControl: 'no-cache'
-                       , file: secondFilename
+                       , file: firstFilename
                        }
           , files = {}
 
