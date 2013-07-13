@@ -48,14 +48,14 @@ describe('CliTest', function() {
             assertConfigValueSet('-t', 'http', 'type')
         })
     })
-    
+
     describe('isHelpRequested', function() {
         it('returns true when help is requested', function() {
             var cli = new Cli(['--help'])
-            
+
             expect(cli.isHelpRequested()).to.be.true
         })
-        
+
         it('returns false when help is not requested', function() {
             var cli = new Cli([])
 
@@ -67,13 +67,13 @@ describe('CliTest', function() {
         var consoleLogSpy
 
         beforeEach(function() {
-            consoleLogSpy = sinon.spy(console, 'log')
+            consoleLogSpy = sinon.stub(console, 'log')
         })
-        
+
         afterEach(function() {
             consoleLogSpy.restore()
         })
-        
+
         it('displays help', function() {
             Cli.prototype.showHelp()
             expect(consoleLogSpy.calledOnce).to.be.true
