@@ -1,17 +1,17 @@
 var path = require('path');
 
 module.exports = function(grunt) {
-    var config = { devserver: getDevServerConfig()
-                 , mochaTest: getMochaTestConfig()
-                 , mochaTestConfig: getMochaTestConfigConfig()
-                 , jshint: getJshintConfig()
+    var config = { devserver: getDevServerOptions()
+                 , mochaTest: getMochaTestOptions()
+                 , mochaTestConfig: getMochaTestConfigOptions()
+                 , jshint: getJshintOptions()
                  }
 
     loadTasks()
-    grunt.registerTask('test', ['mochaTest'])
     grunt.initConfig(config)
 
-    function getDevServerConfig() {
+
+    function getDevServerOptions() {
         return { options: { type : 'https'     // the server protocol (default http)
                           , port : 8888        // the server port to listen on
                           , base : '.'         // the base folder to serve files
@@ -20,23 +20,24 @@ module.exports = function(grunt) {
                }
     }
 
-    function getMochaTestConfig() {
-        return { unit: ['./test/unit/**/*Test.js'] }
-    }
-
-    function getMochaTestConfigConfig() {
-        return { unit: { options: { ui: 'bdd'
-                                  , reporter: 'spec'
-                                  , require: 'test/unit/common'
-                                  , noColors: true
-                                  }
-                       }
+    function getMochaTestOptions() {
+        return { unit: ['./test/unit/**/*Test.js']
+               , integration: ['./test/integration/**/*Test.js']
                }
     }
 
-    function getJshintConfig() {
+    function getMochaTestConfigOptions() {
+        return { options: { ui: 'bdd'
+                          , reporter: 'spec'
+                          , noColors: true
+                          , require: 'test/common'
+                          }
+               }
+    }
+
+    function getJshintOptions() {
         return { options: { jshintrc: '.jshintrc' }
-               , all: { src: ['Gruntfile.js', 'lib/**/*.js', 'test/unit/**/*.js'] }
+               , all: { src: ['Gruntfile.js', 'lib/**/*.js', 'test/unit/**/*.js', 'test/integration/**/*.js'] }
                }
     }
 
@@ -45,5 +46,7 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test')
         grunt.registerTask('default', ['jshint', 'test'])
+        grunt.registerTask('e2e', ['jshint', 'mochaTest'])
+        grunt.registerTask('test', ['mochaTest:unit'])
     }
 }
