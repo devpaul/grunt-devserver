@@ -102,26 +102,37 @@ You need to add node to your path.  On a Mac 10.8.x or later [see launchctl man 
 Configuration files provide you with the same functionality as provided by a grunt configuration.  Since it is
 decoupled from GruntFile.js, configuration files can be shared easily among projects or used from the command-line.
 
+Configuration files can be loaded in one of two ways.
+
+* if it is explicitly defined in configuration
+* if a file named devserverrc exists in the current directory
+
+When a property exists in the grunt/command-line configuration and in the configuration file, the grunt/command-line
+option always overrides the file options.
 
 
 ### Example
-From ~/.devserverrv
+A example devserverrc file
 ```
-{ options: { 'type' : http
-           , 'port' : 8888
-           }
+{ "options": { "type" : "http"
+             , "port" : 8888
+             }
 }
 ```
 
-### Configuration Search Path
-Configuration files will be loaded in the following order
+When this file is loaded from the command-line
+```
+    devserver --file "./devserverrc" --port 4321 --cache "no-store"
+```
 
-* a configured location (e.g. using the command-line option ```--file```)
-* a .devserverrc file from the current directory
-
-Once a configuration file has been found the remaining locations are not searched.
-
-
+The resulting configuration used by devserver
+```
+{ "options": { "type" : "http"
+             , "port" : 4321
+             , "cache" : "no-store"
+             }
+}
+```
 
 ## Contributing
 There are many ways to contribute:
