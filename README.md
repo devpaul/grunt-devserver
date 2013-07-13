@@ -52,7 +52,7 @@ devserver : { options: { 'type' : <string> (http|https defaults to http)
             }
 ```
 * httpsOptions are passed directly through to node's https.createServer() method. [Read the docs for more information][nodehttps].
-* See [Using Configuration Files](#devserverrc) for samples on how to use file configurations with devserver
+* See [Using Configuration Files](#configuration) for samples on how to use file configurations with devserver
 
 Load the devserver task:
 ```
@@ -98,18 +98,11 @@ You need to add node to your path.  On a Mac 10.8.x or later [see launchctl man 
 1. Add ``` setenv PATH /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin ```
 1. Reboot
 
-## Using Configuration Files <a id="devserverrc"></a>
+## Configuration <a id="configuration"></a>
 Configuration files provide you with the same functionality as provided by a grunt configuration.  Since it is
 decoupled from GruntFile.js, configuration files can be shared easily among projects or used from the command-line.
 
-### Configuration search path
-Configuration files are loaded in this order:
 
-* a configured location (e.g. using the command-line option ```--file```)
-* a .devserverrc file from the current directory
-* a .devserverrc file from the users home directory
-
-Once a configuration file has been found the remaining locations are not searched.
 
 ### Example
 From ~/.devserverrv
@@ -119,6 +112,16 @@ From ~/.devserverrv
            }
 }
 ```
+
+### Configuration Search Path
+Configuration files will be loaded in the following order
+
+* a configured location (e.g. using the command-line option ```--file```)
+* a .devserverrc file from the current directory
+
+Once a configuration file has been found the remaining locations are not searched.
+
+
 
 ## Contributing
 There are many ways to contribute:
