@@ -102,14 +102,8 @@ You need to add node to your path.  On a Mac 10.8.x or later [see launchctl man 
 Configuration files provide you with the same functionality as provided by a grunt configuration.  Since it is
 decoupled from GruntFile.js, configuration files can be shared easily among projects or used from the command-line.
 
-Configuration files can be loaded in one of two ways.
-
-* if it is explicitly defined in configuration
-* if a file named devserverrc exists in the current directory
-
 When a property exists in the grunt/command-line configuration and in the configuration file, the grunt/command-line
 option always overrides the file options.
-
 
 ### Example
 A example devserverrc file
@@ -154,6 +148,7 @@ When resolving issues or adding features please be sure to follow the [style gui
 ### 0.3.1
  * added configuration from a file [\#4][issue4]
  * added usage from IntelliJ instructions to README.md
+ * added integration tests and e2e (end to end) grunt target for testing
 
 ### 0.3.0
  * added https support [\#2][issue2]
@@ -182,3 +177,4 @@ Logos and tools are property of their respective owners.
 [issue2]: https://github.com/devpaul/grunt-devserver/issues/2
 [issue3]: https://github.com/devpaul/grunt-devserver/issues/3
 [issue4]: https://github.com/devpaul/grunt-devserver/issues/4
+[issue5]: https://github.com/devpaul/grunt-devserver/issues/5
