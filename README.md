@@ -10,6 +10,8 @@ grunt-devserver provides a simple way to quickly get a development server servin
 As a developer I needed a lightweight way to serve up client-side applications and content in isolation from a larger
 server application.  Something that supported a rapid workflow and integrated with my tools.
 
+[![Build Status](https://travis-ci.org/devpaul/grunt-devserver.png?branch=master)](https://travis-ci.org/devpaul/grunt-devserver)
+
 ## Installation
 Install it from the command line into your project
 ```
@@ -145,6 +147,10 @@ faster.
 When resolving issues or adding features please be sure to follow the [style guide] and make sure code is fully tested.
 
 ## Version Notes
+### 0.3.2
+ * Fixed an issue with case sensitive systems [\#6][issue4]
+ * Added Travis-ci integration
+
 ### 0.3.1
  * added configuration from a file [\#4][issue4]
  * added usage from IntelliJ instructions to README.md
@@ -178,3 +184,4 @@ Logos and tools are property of their respective owners.
 [issue3]: https://github.com/devpaul/grunt-devserver/issues/3
 [issue4]: https://github.com/devpaul/grunt-devserver/issues/4
 [issue5]: https://github.com/devpaul/grunt-devserver/issues/5
+[issue6]: https://github.com/devpaul/grunt-devserver/issues/6
