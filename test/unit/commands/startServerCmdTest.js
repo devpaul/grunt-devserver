@@ -34,7 +34,7 @@ describe('startServerCmdTest', function() {
           , promise = startServerCmd(options)
         expect(promise.then(function(server) {
             expect(ServerSpy.calledOnce).to.be.true
-            expect(server).to.be.equal(ServerSpy())
+            expect(server).to.be.equal(new ServerSpy())
         })).to.be.fulfilled.notify(done)
     })
 

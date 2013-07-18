@@ -1,13 +1,13 @@
 var Sandbox = require('sandboxed-module')
   , devserver
 
-describe("indexTest", function() {
+describe('indexTest', function() {
     beforeEach(function() {
         devserver = require('../../')
     })
 
-    describe("construction", function() {
-        it("is correctly defined", function() {
+    describe('construction', function() {
+        it('is correctly defined', function() {
             expect(devserver).to.be.defined
             expect(devserver.Server).to.be.a('function')
             expect(devserver.HttpConfig).to.be.a('function')
@@ -15,7 +15,7 @@ describe("indexTest", function() {
         })
     })
 
-    describe("devserver", function() {
+    describe('devserver', function() {
         var loadOptionsStub, startServerStub
 
         beforeEach(function() {
@@ -27,23 +27,23 @@ describe("indexTest", function() {
             devserver = Sandbox.require(UNIT_UNDER_TEST_PATH, { requires: requires })
         })
 
-        it("loads a complete set of options", function() {
+        it('loads a complete set of options', function() {
             devserver()
             expect(loadOptionsStub.calledOnce).to.be.true
             expect(loadOptionsStub.firstCall.firstArg).to.be.equal(undefined)
         })
 
-        it("defaults to an empty options object when no argument is passed", function() {
+        it('defaults to an empty options object when no argument is passed', function() {
             devserver()
             expect(startServerStub.firstCall.args[0]).to.deep.equal({})
         })
 
-        it("starts the server", function() {
+        it('starts the server', function() {
             devserver()
             expect(startServerStub.calledOnce).to.be.true
         })
-        
-        it("returns the promise from the start server command", function() {
+
+        it('returns the promise from the start server command', function() {
             var expected = 'expected'
             startServerStub.returns(expected)
             expect(devserver()).to.be.equal(expected)
