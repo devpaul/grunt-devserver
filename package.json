@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/devpaul/grunt-devserver/issues"
   },
-  "main": "index",
+  "main": "lib/index",
   "scripts": {
     "test": "grunt test",
     "start": "node ./"
