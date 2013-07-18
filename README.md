@@ -160,9 +160,13 @@ faster.
 When resolving issues or adding features please be sure to follow the [style guide] and make sure code is fully tested.
 
 ## Version Notes
+### 0.4.0
+ * added module support [\#7][issue7]
+ * fixed an ordering issue in the middleware that was preventing index.html pages from being viewed [\#5][issue5]
+
 ### 0.3.2
- * Fixed an issue with case sensitive systems [\#6][issue4]
- * Added Travis-ci integration
+ * fixed an issue with case sensitive systems [\#6][issue6]
+ * added Travis-ci integration
 
 ### 0.3.1
  * added configuration from a file [\#4][issue4]
@@ -198,3 +202,4 @@ Logos and tools are property of their respective owners.
 [issue4]: https://github.com/devpaul/grunt-devserver/issues/4
 [issue5]: https://github.com/devpaul/grunt-devserver/issues/5
 [issue6]: https://github.com/devpaul/grunt-devserver/issues/6
+[issue7]: https://github.com/devpaul/grunt-devserver/issues/7
