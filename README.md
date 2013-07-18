@@ -10,7 +10,7 @@ grunt-devserver provides a simple way to quickly get a development server servin
 As a developer I needed a lightweight way to serve up client-side applications and content in isolation from a larger
 server application.  Something that supported a rapid workflow and integrated with my tools.
 
-[![Build Status](https://travis-ci.org/devpaul/grunt-devserver.png?branch=master)](https://travis-ci.org/devpaul/grunt-devserver)
+[![Build Status](https://travis-ci.org/devpaul/grunt-devserver.png?branch=master)](https://travis-ci.org/devpaul/grunt-devserver) [![NPM version](https://badge.fury.io/js/grunt-devserver.png)](http://badge.fury.io/js/grunt-devserver)
 
 ## Installation
 Install it from the command line into your project
