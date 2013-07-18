@@ -32,8 +32,10 @@ describe('startServerCmdTest', function() {
     it('creates a new server', function(done) {
         var options = {}
           , promise = startServerCmd(options)
-        expect(promise.then(function() { expect(ServerSpy.calledOnce).to.be.true }))
-            .to.be.fulfilled.notify(done)
+        expect(promise.then(function(server) {
+            expect(ServerSpy.calledOnce).to.be.true
+            expect(server).to.be.equal(ServerSpy())
+        })).to.be.fulfilled.notify(done)
     })
 
     it('automatically starts the server on the configured port', function(done) {

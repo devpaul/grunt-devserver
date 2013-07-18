@@ -1,7 +1,11 @@
-var devserver = require('../../')
-  , Sandbox = require('sandboxed-module')
+var Sandbox = require('sandboxed-module')
+  , devserver
 
 describe("indexTest", function() {
+    beforeEach(function() {
+        devserver = require('../../')
+    })
+
     describe("construction", function() {
         it("is correctly defined", function() {
             expect(devserver).to.be.defined
@@ -39,8 +43,10 @@ describe("indexTest", function() {
             expect(startServerStub.calledOnce).to.be.true
         })
         
-        it("", function() {
-            
+        it("returns the promise from the start server command", function() {
+            var expected = 'expected'
+            startServerStub.returns(expected)
+            expect(devserver()).to.be.equal(expected)
         })
     })
 })
