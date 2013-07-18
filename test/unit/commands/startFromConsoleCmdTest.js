@@ -51,6 +51,12 @@ describe('startFromConsoleCmdTest', function() {
     })
 
     it('starts the server', function() {
+        startFromConsoleCmd()
+        expect(startServerSpy.calledOnce).to.be.true
+        expect(loadCompleteOptionsSpy.calledOnce).to.be.true
+    })
+
+    it('starts the server with a custom Cli', function() {
         var cli = new Cli()
         startFromConsoleCmd(cli)
         expect(startServerSpy.calledOnce).to.be.true
