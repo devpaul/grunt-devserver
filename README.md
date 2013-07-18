@@ -73,6 +73,19 @@ and you're ready to go
 grunt devserver
 ```
 
+### From Your Project
+You can also use devserver directly as a module in your project.
+
+```
+    var devserver = require('grunt-devserver')
+      , options = { type: "http", port: 8000 }
+      , serverStarted = devserver(options)
+
+    serverStarted.then(function(server) {
+        // TODO something awesome
+    })
+```
+
 ### From Intellij
 As a developer tool integration is extremely important.  If you are using a Jetbrains IDE like IntelliJ or WebStorm
 here are instructions to start a devserver directly in your IDE  by adding an entry to your
