@@ -17,6 +17,7 @@ module.exports = function(grunt) {
                           , base : '.'         // the base folder to serve files
                           , cache : 'no-store' // http caching method (defaults to 'no-cache')
                           , file : './test/assets/options/rootOptions.json' // loads additional option parameters
+                          , async : true // holds a grunt session open
                           }
                }
     }

@@ -50,11 +50,13 @@ devserver : { options: { 'type' : <string> (http|https defaults to http)
                        , 'cache' : <string> (defaults to 'no-cache')
                        , 'httpsOptions' : <object> https.createServer options
                        , 'file' : <filename>
+                       , 'async' : <boolean> (defaults to true)
                        }
             }
 ```
-* httpsOptions are passed directly through to node's https.createServer() method. [Read the docs for more information][nodehttps].
-* See [Using Configuration Files](#configuration) for samples on how to use file configurations with devserver
+* `httpsOptions` are passed directly through to node's https.createServer() method. [Read the docs for more information][nodehttps].
+* `async` if set to true it will keep Grunt from terminating (see [Grunt Tasks])
+* `file` See [Using Configuration Files](#configuration) for samples on how to use file configurations with devserver
 
 Load the devserver task:
 ```
@@ -203,3 +205,4 @@ Logos and tools are property of their respective owners.
 [issue5]: https://github.com/devpaul/grunt-devserver/issues/5
 [issue6]: https://github.com/devpaul/grunt-devserver/issues/6
 [issue7]: https://github.com/devpaul/grunt-devserver/issues/7
+[Grunt Tasks]: http://gruntjs.com/api/inside-tasks#this.async

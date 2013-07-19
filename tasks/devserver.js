@@ -7,7 +7,8 @@ function devserver(grunt) {
     function devServerTask() {
         var options = loadCompleteOptions(this.options())
 
-        this.async()
+        if(!options.hasOwnProperty('async') || options.async === true)
+            this.async()
         return startServer(options)
     }
 }

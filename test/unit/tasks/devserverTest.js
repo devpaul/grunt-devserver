@@ -38,15 +38,15 @@ describe('devserverTest', function() {
     })
 
     describe('devServerTask', function() {
-        var options, devserverTask, taskContext, promise
+        var options, devserverTask, taskContext
 
-        beforeEach(function() {
-            options = { }
+        function callDevServerTaskWithOptions(opts) {
+            options = opts
             taskContext = createTaskContext()
             devserver(gruntStub)
             devserverTask = gruntStub.registerTask.firstCall.args[2]
-            promise = devserverTask.call(taskContext)
-        })
+            devserverTask.call(taskContext)
+        }
 
         function createTaskContext() {
             var gruntOptions = sinon.stub()
@@ -57,15 +57,28 @@ describe('devserverTest', function() {
         }
 
         it('is an async task', function() {
+            callDevServerTaskWithOptions({})
             expect(taskContext.async.calledOnce).to.be.true
         })
 
+        it('is an async task when the async option is set to true', function() {
+            callDevServerTaskWithOptions({ async : true })
+            expect(taskContext.async.called).to.be.true
+        })
+
+        it('is not async when the async option is set to false', function() {
+            callDevServerTaskWithOptions({ async : false })
+            expect(taskContext.async.called).to.be.false
+        })
+
         it('starts the server with the provided options', function() {
+            callDevServerTaskWithOptions({})
             expect(startServerCmdSpy.calledOnce).to.be.true
             expect(startServerCmdSpy.firstCall.args[0]).to.deep.equal(options)
         })
 
         it('loads the complete configuration options', function() {
+            callDevServerTaskWithOptions({})
             expect(loadCompleteStub.called).to.be.true
         })
     })
