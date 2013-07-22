@@ -13,7 +13,7 @@
   },
   "main": "lib/index",
   "scripts": {
-    "test": "grunt test",
+    "test": "grunt e2e",
     "start": "node ./"
   },
   "dependencies": {
