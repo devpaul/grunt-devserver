@@ -162,6 +162,9 @@ faster.
 When resolving issues or adding features please be sure to follow the [style guide] and make sure code is fully tested.
 
 ## Version Notes
+### 0.4.1
+ * added async configuration option
+
 ### 0.4.0
  * added module support [\#7][issue7]
  * fixed an ordering issue in the middleware that was preventing index.html pages from being viewed [\#5][issue5]
