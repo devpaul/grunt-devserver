@@ -1,4 +1,5 @@
 var SandboxedModule = require('sandboxed-module')
+  , Q = require('q')
 
 describe('devserverTest', function() {
     var devserver, gruntStub, startServerCmdSpy, loadCompleteStub
@@ -17,7 +18,10 @@ describe('devserverTest', function() {
     }
 
     function createStartServerCmdSpy() {
-        startServerCmdSpy = sinon.stub()
+        var deferred = Q.defer()
+        startServerCmdSpy = sinon.stub().returns(deferred.promise)
+        startServerCmdSpy.deferred = deferred
+        deferred.resolve()
         return startServerCmdSpy
     }
 
@@ -26,60 +30,70 @@ describe('devserverTest', function() {
         return loadCompleteStub
     }
 
-
     function createGruntStub() {
-        return { registerTask : sinon.stub() }
+        return { registerMultiTask : sinon.stub() }
     }
 
     it('registers a devserver grunt task', function() {
         devserver(gruntStub)
-        expect(gruntStub.registerTask.calledOnce).to.be.true
-        expect(gruntStub.registerTask.firstCall.args[0]).to.be.equal('devserver')
+        expect(gruntStub.registerMultiTask.calledOnce).to.be.true
+        expect(gruntStub.registerMultiTask.firstCall.args[0]).to.be.equal('devserver')
     })
 
     describe('devServerTask', function() {
-        var options, devserverTask, taskContext
+        var devserverTask, taskContext, doneStub
+          , DATA = [ [{}, false] // [options, callsDone]
+                   , [{ async: true }, false]
+                   , [{ async: 'garbage'}, false]
+                   , [{ async: false}, true]]
+          , NAMES = ['undefined', 'true', 'garbage', 'false']
 
         function callDevServerTaskWithOptions(opts) {
-            options = opts
-            taskContext = createTaskContext()
+            taskContext = createTaskContext(opts)
             devserver(gruntStub)
-            devserverTask = gruntStub.registerTask.firstCall.args[2]
-            devserverTask.call(taskContext)
+            devserverTask = gruntStub.registerMultiTask.firstCall.args[2]
+            return devserverTask.call(taskContext)
         }
 
-        function createTaskContext() {
+        function createTaskContext(opts) {
             var gruntOptions = sinon.stub()
-            gruntOptions.returns(options)
+            doneStub = sinon.stub()
+            gruntOptions.returns(opts)
             return { options : gruntOptions
-                   , async : sinon.stub()
+                   , async : sinon.stub().returns(doneStub)
                    }
         }
-
-        it('is an async task', function() {
-            callDevServerTaskWithOptions({})
-            expect(taskContext.async.calledOnce).to.be.true
-        })
-
-        it('is an async task when the async option is set to true', function() {
-            callDevServerTaskWithOptions({ async : true })
-            expect(taskContext.async.called).to.be.true
-        })
-
-        it('is not async when the async option is set to false', function() {
-            callDevServerTaskWithOptions({ async : false })
-            expect(taskContext.async.called).to.be.false
-        })
-
-        it('starts the server with the provided options', function() {
-            callDevServerTaskWithOptions({})
-            expect(startServerCmdSpy.calledOnce).to.be.true
-            expect(startServerCmdSpy.firstCall.args[0]).to.deep.equal(options)
-        })
 
         it('loads the complete configuration options', function() {
             callDevServerTaskWithOptions({})
             expect(loadCompleteStub.called).to.be.true
+        })
+
+        // Parameterized Test
+        DATA.forEach(function(data, index) {
+            var options = data[0]
+              , callsDone = data[1]
+              , name = NAMES[index]
+              , doneTestName = (callsDone ? 'does not call' : 'calls') + ' done when async is ' + name
+
+            it('is an async task when async is ' + name, function() {
+                callDevServerTaskWithOptions(options)
+                expect(taskContext.async.calledOnce).to.be.true
+            })
+
+            it('starts the server with the provided options: ' + name, function() {
+                callDevServerTaskWithOptions(options)
+                expect(startServerCmdSpy.calledOnce).to.be.true
+                expect(startServerCmdSpy.firstCall.args[0]).to.deep.equal(options)
+            })
+
+            it(doneTestName, function(done) {
+                callDevServerTaskWithOptions(options)
+                var promise = callDevServerTaskWithOptions(options)
+                expect(promise.then(function() {
+                    expect(callsDone).to.be.equal(doneStub.calledOnce)
+                })).to.be.fulfilled.notify(done)
+            })
         })
     })
 })

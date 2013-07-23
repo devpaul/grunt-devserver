@@ -1,54 +1,26 @@
 var path = require('path');
 
 module.exports = function(grunt) {
-    var config = { devserver: getDevServerOptions()
-                 , mochaTest: getMochaTestOptions()
-                 , mochaTestConfig: getMochaTestConfigOptions()
-                 , jshint: getJshintOptions()
-                 }
-
+    initialize()
     loadTasks()
-    grunt.initConfig(config)
+    describeGoals()
 
-
-    function getDevServerOptions() {
-        return { options: { type : 'https'     // the server protocol (default http)
-                          , port : 8888        // the server port to listen on
-                          , base : '.'         // the base folder to serve files
-                          , cache : 'no-store' // http caching method (defaults to 'no-cache')
-                          , file : './test/assets/options/rootOptions.json' // loads additional option parameters
-                          , async : true // holds a grunt session open
-                          }
-               }
-    }
-
-    function getMochaTestOptions() {
-        return { unit: ['./test/unit/**/*Test.js']
-               , integration: ['./test/integration/**/*Test.js']
-               }
-    }
-
-    function getMochaTestConfigOptions() {
-        return { options: { ui: 'bdd'
-                          , reporter: 'spec'
-                          , noColors: true
-                          , require: 'test/common'
-                          }
-               }
-    }
-
-    function getJshintOptions() {
-        return { options: { jshintrc: '.jshintrc' }
-               , all: { src: ['Gruntfile.js', 'lib/**/*.js', 'test/unit/**/*.js', 'test/integration/**/*.js'] }
-               }
+    function initialize() {
+        var config = require('./Gruntconfig.js')
+        grunt.initConfig(config)
     }
 
     function loadTasks() {
         grunt.loadTasks(path.resolve('tasks'))
         grunt.loadNpmTasks('grunt-contrib-jshint');
         grunt.loadNpmTasks('grunt-mocha-test')
-        grunt.registerTask('default', ['jshint', 'test'])
-        grunt.registerTask('e2e', ['jshint', 'mochaTest'])
-        grunt.registerTask('test', ['mochaTest:unit'])
+    }
+
+    function describeGoals() {
+        grunt.registerTask('default', 'devserver')
+        grunt.registerTask('e2e', ['jshint', 'unit', 'integration'])
+        grunt.registerTask('integration', ['devserver:e2e', 'mochaTest:integration'])
+        grunt.registerTask('unit', ['mochaTest:unit'])
+        grunt.registerTask('test', 'e2e')
     }
 }
