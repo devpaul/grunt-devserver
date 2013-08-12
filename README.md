@@ -162,6 +162,10 @@ faster.
 When resolving issues or adding features please be sure to follow the [style guide] and make sure code is fully tested.
 
 ## Version Notes
+### 0.5.0
+ * Added grunt multitask support [\#8][issue8]
+ * Added command line multi-server configuration [\#9][issue9]
+
 ### 0.4.1
  * added async configuration option
 
@@ -208,4 +212,6 @@ Logos and tools are property of their respective owners.
 [issue5]: https://github.com/devpaul/grunt-devserver/issues/5
 [issue6]: https://github.com/devpaul/grunt-devserver/issues/6
 [issue7]: https://github.com/devpaul/grunt-devserver/issues/7
+[issue8]: https://github.com/devpaul/grunt-devserver/issues/8
+[issue9]: https://github.com/devpaul/grunt-devserver/issues/9
 [Grunt Tasks]: http://gruntjs.com/api/inside-tasks#this.async
