@@ -14,6 +14,7 @@ describe('CliTest', function() {
             assertUndefinedConfigValue('port')
             assertUndefinedConfigValue('cache')
             assertUndefinedConfigValue('base')
+            assertUndefinedConfigValue('server')
         })
 
         function assertUndefinedConfigValue(key) {
@@ -22,8 +23,7 @@ describe('CliTest', function() {
         }
 
         function assertConfigValueSet(argName, expected, configKey) {
-            var args = argName + ' ' + expected
-              , cli = new Cli(args.split(' '))
+            var cli = new Cli([argName.toString(), expected.toString()])
 
             expect(cli.options[configKey]).to.be.equal(expected)
         }
@@ -46,6 +46,17 @@ describe('CliTest', function() {
         it('uses the type method from cli', function() {
             assertConfigValueSet('--type', 'https', 'type')
             assertConfigValueSet('-t', 'http', 'type')
+        })
+
+        it('uses server from cli', function() {
+            assertConfigValueSet('--server', 'image', 'server')
+            assertConfigValueSet('--s', 'image', 'server')
+        })
+
+        it('supports multiple servers from cli', function() {
+            var cli = new Cli(['--server','image','-s','potato'])
+
+            expect(cli.options.server).to.deep.equal(['image','potato'])
         })
     })
 
