@@ -1,8 +1,9 @@
 var SandboxedModule = require('sandboxed-module')
   , Cli = require('../../../lib/controller/Cli.js')
+  , Config = require('../../../lib/model/Config.js')
 
 describe('startFromConsoleCmdTest', function() {
-    var startFromConsoleCmd, startServerSpy, loadCompleteOptionsSpy
+    var startFromConsoleCmd, startServerSpy
 
     beforeEach(function() {
         mockDependenciesForUnitUnderTest()
@@ -11,7 +12,7 @@ describe('startFromConsoleCmdTest', function() {
     function mockDependenciesForUnitUnderTest() {
         var UNIT_UNDER_TEST_PATH = '../../../lib/commands/startFromConsoleCmd'
           , options = { requires : { './startServerCmd.js' : createMockStartServer()
-                                   , './loadCompleteOptionsCmd.js' : createMockLoadCompleteOptions()
+                                   , '../model/Config.js' : Config
                                    }
                       }
         startFromConsoleCmd = SandboxedModule.require(UNIT_UNDER_TEST_PATH, options)
@@ -20,12 +21,6 @@ describe('startFromConsoleCmdTest', function() {
     function createMockStartServer() {
         startServerSpy = sinon.stub()
         return startServerSpy
-    }
-
-    function createMockLoadCompleteOptions() {
-        loadCompleteOptionsSpy = sinon.stub()
-        loadCompleteOptionsSpy.returnsArg(0)
-        return loadCompleteOptionsSpy
     }
 
     describe('help', function() {
@@ -50,17 +45,38 @@ describe('startFromConsoleCmdTest', function() {
         })
     })
 
-    it('starts the server', function() {
-        startFromConsoleCmd()
-        expect(startServerSpy.calledOnce).to.be.true
-        expect(loadCompleteOptionsSpy.calledOnce).to.be.true
+    describe('basic configuration', function() {
+        it('starts the server', function() {
+            startFromConsoleCmd()
+            expect(startServerSpy.calledOnce).to.be.true
+        })
+
+        it('starts the server with a custom Cli', function() {
+            var cli = new Cli()
+            startFromConsoleCmd(cli)
+            expect(startServerSpy.calledOnce).to.be.true
+        })
     })
 
-    it('starts the server with a custom Cli', function() {
-        var cli = new Cli()
-        startFromConsoleCmd(cli)
-        expect(startServerSpy.calledOnce).to.be.true
-        expect(loadCompleteOptionsSpy.calledOnce).to.be.true
-        expect(startServerSpy.firstCall.args[0]).to.be.equal(cli.options)
+    describe('multiserver configuration', function() {
+        var cli
+
+        beforeEach(function() {
+            var loadedOptions = { one: {}
+                                , two: {}
+                                }
+
+            cli = new Cli(['--server', 'one', '--server', 'two'])
+            sinon.stub(Config.prototype, '_loadOptionsFile').returns(loadedOptions)
+        })
+
+        afterEach(function() {
+            Config.prototype._loadOptionsFile.restore()
+        })
+
+        it('starts multiserver', function() {
+            startFromConsoleCmd(cli)
+            expect(startServerSpy.calledTwice).to.be.true
+        })
     })
 })
