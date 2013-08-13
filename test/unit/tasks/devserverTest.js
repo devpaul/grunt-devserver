@@ -2,7 +2,7 @@ var SandboxedModule = require('sandboxed-module')
   , Q = require('q')
 
 describe('devserverTest', function() {
-    var devserver, gruntStub, startServerCmdSpy, loadCompleteStub
+    var devserver, gruntStub, startServerCmdSpy
 
     beforeEach(function() {
         gruntStub = createGruntStub()
@@ -10,10 +10,7 @@ describe('devserverTest', function() {
     })
 
     function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../lib/commands/startServerCmd.js' : createStartServerCmdSpy()
-                                   , '../lib/commands/loadCompleteOptionsCmd.js' : createLoadCompleteStub()
-                                   }
-                      }
+        var options = { requires : { '../lib/commands/startServerCmd.js' : createStartServerCmdSpy() } }
         devserver = SandboxedModule.require('../../../tasks/devserver', options)
     }
 
@@ -23,11 +20,6 @@ describe('devserverTest', function() {
         startServerCmdSpy.deferred = deferred
         deferred.resolve()
         return startServerCmdSpy
-    }
-
-    function createLoadCompleteStub() {
-        loadCompleteStub = sinon.stub().returnsArg(0)
-        return loadCompleteStub
     }
 
     function createGruntStub() {
@@ -63,11 +55,6 @@ describe('devserverTest', function() {
                    , async : sinon.stub().returns(doneStub)
                    }
         }
-
-        it('loads the complete configuration options', function() {
-            callDevServerTaskWithOptions({})
-            expect(loadCompleteStub.called).to.be.true
-        })
 
         // Parameterized Test
         DATA.forEach(function(data, index) {

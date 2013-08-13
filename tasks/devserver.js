@@ -1,12 +1,13 @@
 var startServer = require('../lib/commands/startServerCmd.js')
-  , loadCompleteOptions = require('../lib/commands/loadCompleteOptionsCmd.js')
+  , Config = require('../lib/model/Config.js')
 
 function devserver(grunt) {
     grunt.registerMultiTask('devserver', 'Start a static web server.', devServerTask);
 
     function devServerTask() {
-        var options = loadCompleteOptions(this.options())
+        var config = new Config(this.options())
           , done = this.async()
+          , options = this.target ? config.getServer(this.target) : config.getOptions()
           , promise = startServer(options)
 
         promise.then(onServerStarted)
