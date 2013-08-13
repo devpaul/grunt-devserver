@@ -130,20 +130,19 @@ describe('ConfigTest', function() {
     })
 
     describe('getServer', function() {
-        it('throws when server does not exist', function() {
-            var config = createConfig(fileOptions, multiOptions)
-
-            expect(function() {
-                config.getServer('non-existant server')
-            }).to.throw()
-        })
-
         it('returns the requested server', function() {
             var config = createConfig(fileOptions, multiOptions)
-                , options = config.getServer('image')
+              , options = config.getServer('image')
 
             expect(options).to.not.be.undefined
             expect(options).to.deep.equal(expectedImage)
+        })
+
+        it('returns base options when requested server does not exist', function() {
+            var config = createConfig(fileOptions, { options: basicOptions })
+              , options = config.getServer('undefined server')
+
+            expect(options).to.deep.equal(basicOptions)
         })
     })
 
