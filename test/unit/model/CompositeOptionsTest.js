@@ -55,11 +55,11 @@ describe('CompositeOptionsTest', function() {
             expect(unit.getOptions('production')).to.deep.equal(expected)
         })
     })
-    
+
     describe('getConfigurationNames', function() {
         it('returns an empty array when no options are present', function() {
             var unit = new CompositeOptions()
-            
+
             expect(unit.getConfigurationNames().length).to.be.equal(0)
         })
 
@@ -72,7 +72,7 @@ describe('CompositeOptionsTest', function() {
 
         it('returns a deduped list of configuration names', function() {
             var anotherMulti = { options: { port: 99 }, production: {}, proxy: { port: 8000 }}
-                unit = new CompositeOptions([multi, multi, new MultiOptions(anotherMulti)])
+              , unit = new CompositeOptions([multi, multi, new MultiOptions(anotherMulti)])
               , expected = ['production', 'proxy']
 
             expect(unit.getConfigurationNames().length).to.be.equal(expected.length)

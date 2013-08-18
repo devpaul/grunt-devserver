@@ -56,16 +56,16 @@ describe('BasicOptionsTest', function() {
             expect(unit.file).to.be.equal(options.file)
         })
     })
-    
+
     describe('getOptions', function() {
         it('returns a clone of the options data', function() {
             var options = { port: 80 }
               , unit = new BasicOptions(options)
-            
+
             expect(unit.getOptions()).to.not.be.equal(options)
             expect(unit.getOptions()).to.deep.equal(options)
         })
-        
+
         it('strips server and file properties', function() {
             var options = { port: 80
                           , file: 'devserver.json'
@@ -77,19 +77,19 @@ describe('BasicOptionsTest', function() {
             expect(unit.getOptions()).to.deep.equal(expected)
         })
     })
-    
+
     describe('getConfigurationNames', function() {
         it('returns an empty array', function() {
             var unit = new BasicOptions()
-            
+
             expect(unit.getConfigurationNames()).to.deep.equal([])
         })
     })
-    
+
     describe('hasConfiguration', function() {
         it('returns false', function() {
             var unit = new BasicOptions()
-            
+
             expect(unit.hasConfiguration()).to.be.false
         })
     })

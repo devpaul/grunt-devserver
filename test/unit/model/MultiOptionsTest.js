@@ -67,7 +67,7 @@ describe('MultiOptionsTest', function() {
             expect(unit.getOptions('https')).to.deep.equal(expected)
         })
     })
-    
+
     describe('getConfigurationNames', function() {
         it('returns an empty array when no configurations are present', function() {
             var unit = new MultiOptions()
