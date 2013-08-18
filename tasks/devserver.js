@@ -5,8 +5,8 @@ function devserver(grunt) {
     grunt.registerMultiTask('devserver', 'Start a static web server.', devServerTask);
 
     function devServerTask() {
-        var options = loadCompleteOptions(this.options())
-          , done = this.async()
+        var done = this.async()
+          , options = loadCompleteOptions(this.options()).getOptions(this.target)
           , promise = startServer(options)
 
         promise.then(onServerStarted)

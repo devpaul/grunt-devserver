@@ -1,5 +1,6 @@
 var SandboxedModule = require('sandboxed-module')
   , Q = require('q')
+  , BasicOptions = require('../../../lib/model/BasicOptions.js')
 
 describe('devserverTest', function() {
     var devserver, gruntStub, startServerCmdSpy, loadCompleteStub
@@ -26,7 +27,8 @@ describe('devserverTest', function() {
     }
 
     function createLoadCompleteStub() {
-        loadCompleteStub = sinon.stub().returnsArg(0)
+        var options = new BasicOptions()
+        loadCompleteStub = sinon.stub().returns(options)
         return loadCompleteStub
     }
 
@@ -34,66 +36,94 @@ describe('devserverTest', function() {
         return { registerMultiTask : sinon.stub() }
     }
 
-    it('registers a devserver grunt task', function() {
-        devserver(gruntStub)
-        expect(gruntStub.registerMultiTask.calledOnce).to.be.true
-        expect(gruntStub.registerMultiTask.firstCall.args[0]).to.be.equal('devserver')
+    describe('grunt plugin', function() {
+        it('registers a devserver grunt task', function() {
+            devserver(gruntStub)
+            expect(gruntStub.registerMultiTask.calledOnce).to.be.true
+            expect(gruntStub.registerMultiTask.firstCall.args[0]).to.be.equal('devserver')
+        })
     })
 
     describe('devServerTask', function() {
         var devserverTask, taskContext, doneStub
-          , DATA = [ [{}, false] // [options, callsDone]
-                   , [{ async: true }, false]
-                   , [{ async: 'garbage'}, false]
-                   , [{ async: false}, true]]
-          , NAMES = ['undefined', 'true', 'garbage', 'false']
 
-        function callDevServerTaskWithOptions(opts) {
-            taskContext = createTaskContext(opts)
+        describe('handles options correctly', function() {
+            beforeEach(function() {
+                sinon.spy(BasicOptions.prototype, 'getOptions')
+            })
+
+            afterEach(function() {
+                BasicOptions.prototype.getOptions.restore()
+            })
+
+            it('passes the target name to getOptions', function() {
+                var expected = 'expected'
+                callDevServerTaskWithOptions(createTaskContext({}, expected))
+
+                expect(loadCompleteStub().getOptions).to.be.equal(BasicOptions.prototype.getOptions)
+                expect(BasicOptions.prototype.getOptions.firstCall.args[0]).to.be.equal(expected)
+            })
+        })
+
+        describe('starts the server', function() {
+            it('starts the server with options', function() {
+                var expected = { port: 99 }
+                callDevServerTaskWithOptions(createTaskContext(expected))
+
+                expect(startServerCmdSpy.lastCall.args[0]).to.deep.equal(expected)
+            })
+        })
+
+        describe('async', function() {
+            var PARAM_ASYNC = [ [{}]
+                              , [{ async: true }]
+                              , [{ async: 'garbage'}]
+                              ]
+              , NAMES_ASYNC = ['undefined', 'true', 'garbage']
+
+            PARAM_ASYNC.forEach(function(value, index) {
+                var options = value[0]
+
+                it('does not call done when async is ' + NAMES_ASYNC[index], function(done) {
+                    var promise = callDevServerTaskWithOptions(createTaskContext(options))
+
+                    promise.then(function () {
+                        expect(doneStub.called).to.be.false
+                        done()
+                    })
+                })
+            })
+
+            it('calls done when async is false', function(done) {
+                var context = createTaskContext({ async: false })
+                var promise = callDevServerTaskWithOptions(context)
+
+                promise.then(function() {
+                    expect(context.async().called).to.be.true
+                    done()
+                })
+
+            })
+        })
+
+        function callDevServerTaskWithOptions(context) {
+            taskContext = context
             devserver(gruntStub)
             devserverTask = gruntStub.registerMultiTask.firstCall.args[2]
             return devserverTask.call(taskContext)
         }
 
-        function createTaskContext(opts) {
+        function createTaskContext(opts, target) {
             var gruntOptions = sinon.stub()
+              , options = loadCompleteStub()
+            options.options = opts
             doneStub = sinon.stub()
-            gruntOptions.returns(opts)
+            doneStub.opts = opts
+            gruntOptions.returns(opts || {})
             return { options : gruntOptions
                    , async : sinon.stub().returns(doneStub)
+                   , target : target
                    }
         }
-
-        it('loads the complete configuration options', function() {
-            callDevServerTaskWithOptions({})
-            expect(loadCompleteStub.called).to.be.true
-        })
-
-        // Parameterized Test
-        DATA.forEach(function(data, index) {
-            var options = data[0]
-              , callsDone = data[1]
-              , name = NAMES[index]
-              , doneTestName = (callsDone ? 'does not call' : 'calls') + ' done when async is ' + name
-
-            it('is an async task when async is ' + name, function() {
-                callDevServerTaskWithOptions(options)
-                expect(taskContext.async.calledOnce).to.be.true
-            })
-
-            it('starts the server with the provided options: ' + name, function() {
-                callDevServerTaskWithOptions(options)
-                expect(startServerCmdSpy.calledOnce).to.be.true
-                expect(startServerCmdSpy.firstCall.args[0]).to.deep.equal(options)
-            })
-
-            it(doneTestName, function(done) {
-                callDevServerTaskWithOptions(options)
-                var promise = callDevServerTaskWithOptions(options)
-                expect(promise.then(function() {
-                    expect(callsDone).to.be.equal(doneStub.calledOnce)
-                })).to.be.fulfilled.notify(done)
-            })
-        })
     })
 })
