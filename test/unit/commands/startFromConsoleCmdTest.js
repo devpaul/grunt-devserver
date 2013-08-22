@@ -1,21 +1,31 @@
 var SandboxedModule = require('sandboxed-module')
   , Cli = require('../../../lib/controller/Cli.js')
-  , Config = require('../../../lib/model/Config.js')
+  , CompositeOptions = require('../../../lib/model/CompositeOptions.js')
+  , BasicOptions = require('../../../lib/model/BasicOptions.js')
+  , MultiOptions = require('../../../lib/model/MultiOptions.js')
+  , START_FROM_CONSOLE_CMD_PATH = '../../../lib/commands/startFromConsoleCmd'
 
 describe('startFromConsoleCmdTest', function() {
-    var startFromConsoleCmd, startServerSpy
+    var startServerSpy, startFromConsoleCmd, loadCompleteOptions
 
     beforeEach(function() {
-        mockDependenciesForUnitUnderTest()
+        startFromConsoleCmd = require(START_FROM_CONSOLE_CMD_PATH)
     })
 
-    function mockDependenciesForUnitUnderTest() {
-        var UNIT_UNDER_TEST_PATH = '../../../lib/commands/startFromConsoleCmd'
-          , options = { requires : { './startServerCmd.js' : createMockStartServer()
-                                   , '../model/Config.js' : Config
-                                   }
-                      }
-        startFromConsoleCmd = SandboxedModule.require(UNIT_UNDER_TEST_PATH, options)
+    function mockDependenciesForUnitUnderTest(requires) {
+        var options = { requires : requires }
+        startFromConsoleCmd = SandboxedModule.require(START_FROM_CONSOLE_CMD_PATH, options)
+    }
+
+    function getBasicServerRequires() {
+        return { './startServerCmd.js' : createMockStartServer()
+               }
+    }
+
+    function getMultiServerRequires() {
+        return { './startServerCmd.js' : createMockStartServer()
+               , './loadCompleteOptionsCmd.js' : createMockLoadOptions()
+               }
     }
 
     function createMockStartServer() {
@@ -23,10 +33,16 @@ describe('startFromConsoleCmdTest', function() {
         return startServerSpy
     }
 
+    function createMockLoadOptions() {
+        loadCompleteOptions = sinon.stub()
+        return loadCompleteOptions;
+    }
+
     describe('help', function() {
         var cli, showHelpSpy
 
         beforeEach(function() {
+            mockDependenciesForUnitUnderTest(getBasicServerRequires())
             cli = new Cli(['--help'])
             showHelpSpy = sinon.stub(Cli.prototype, 'showHelp')
             startFromConsoleCmd(cli)
@@ -46,6 +62,10 @@ describe('startFromConsoleCmdTest', function() {
     })
 
     describe('basic configuration', function() {
+        beforeEach(function() {
+            mockDependenciesForUnitUnderTest(getBasicServerRequires())
+        })
+
         it('starts the server', function() {
             startFromConsoleCmd()
             expect(startServerSpy.calledOnce).to.be.true
@@ -59,24 +79,43 @@ describe('startFromConsoleCmdTest', function() {
     })
 
     describe('multiserver configuration', function() {
-        var cli
-
         beforeEach(function() {
-            var loadedOptions = { one: {}
-                                , two: {}
-                                }
-
-            cli = new Cli(['--server', 'one', '--server', 'two'])
-            sinon.stub(Config.prototype, '_loadOptionsFile').returns(loadedOptions)
+            mockDependenciesForUnitUnderTest(getMultiServerRequires())
         })
 
-        afterEach(function() {
-            Config.prototype._loadOptionsFile.restore()
-        })
 
-        it('starts multiserver', function() {
+        it('starts multiple defined servers', function() {
+            var basic = { port: 80, server: ['assets', 'production'] }
+              , multi = { options: {}, assets: {}, production: {} }
+              , options = new CompositeOptions([new BasicOptions(basic), new MultiOptions(multi)])
+              , cli = { options: basic, isHelpRequested: function() { return false; }}
+
+            loadCompleteOptions.returns(options)
             startFromConsoleCmd(cli)
             expect(startServerSpy.calledTwice).to.be.true
+        })
+
+        it('starts all servers in a multi server configuration', function() {
+            var basic = { port: 80 }
+              , multi = { options: {}, assets: {}, production: {} }
+              , options = new CompositeOptions([new BasicOptions(basic), new MultiOptions(multi)])
+              , cli = { options: basic, isHelpRequested: function() { return false; }}
+
+            loadCompleteOptions.returns(options)
+            startFromConsoleCmd(cli)
+            expect(startServerSpy.calledTwice).to.be.true
+        })
+
+        it('throws when one configuration does not exist', function() {
+            var basic = { port: 80, server: ['assets', 'production'] }
+              , multi = { options: {}, production: {} }
+              , options = new CompositeOptions([new BasicOptions(basic), new MultiOptions(multi)])
+              , cli = { options: basic, isHelpRequested: function() { return false; }}
+
+            expect(function() {
+                loadCompleteOptions.returns(options)
+                startFromConsoleCmd(cli)
+            }).to.throw()
         })
     })
 })
