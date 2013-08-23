@@ -33,7 +33,9 @@
     "sandboxed-module": "*",
     "grunt-mocha-test": "~0.2.0",
     "grunt-contrib-jshint": "~0.3.0",
-    "chai-as-promised": "~3.3.1"
+    "chai-as-promised": "~3.3.1",
+    "cucumber": "git+https://github.com/devpaul/cucumber-js.git",
+    "grunt-cucumber": "~0.2.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
