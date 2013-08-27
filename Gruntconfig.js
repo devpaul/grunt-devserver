@@ -3,6 +3,7 @@ module.exports = { devserver: getDevServerOptions()
                  , mochaTest: getMochaTestOptions()
                  , mochaTestConfig: getMochaTestConfigOptions()
                  , jshint: getJshintOptions()
+                 , cucumberjs : getCucumberOptions()
                  }
 
 function getDevServerOptions() {
@@ -46,5 +47,13 @@ function getJshintOptions() {
     var src = ['Gruntfile.js', 'lib/**/*.js', 'test/unit/**/*.js', 'test/integration/**/*.js']
     return { options: { jshintrc: '.jshintrc' }
            , all: { src: src}
+           }
+}
+
+function getCucumberOptions() {
+    return { files: './test/features'
+           , options: { steps: "./test/features/step_definitions"
+                      , format: 'pretty'
+                      }
            }
 }

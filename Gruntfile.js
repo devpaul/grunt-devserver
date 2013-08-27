@@ -12,15 +12,17 @@ module.exports = function(grunt) {
 
     function loadTasks() {
         grunt.loadTasks(path.resolve('tasks'))
-        grunt.loadNpmTasks('grunt-contrib-jshint');
+        grunt.loadNpmTasks('grunt-contrib-jshint')
         grunt.loadNpmTasks('grunt-mocha-test')
+        grunt.loadNpmTasks('grunt-cucumber')
     }
 
     function describeGoals() {
         grunt.registerTask('default', 'devserver')
-        grunt.registerTask('e2e', ['jshint', 'unit', 'integration'])
-        grunt.registerTask('integration', ['devserver:e2e', 'mochaTest:integration'])
+        grunt.registerTask('lint', 'jshint')
         grunt.registerTask('unit', ['mochaTest:unit'])
-        grunt.registerTask('test', 'e2e')
+        grunt.registerTask('integration', ['devserver:e2e', 'mochaTest:integration'])
+        grunt.registerTask('functional', ['cucumberjs'])
+        grunt.registerTask('test', ['lint', 'unit', 'integration', 'functional'])
     }
 }
