@@ -8,7 +8,8 @@ Feature: Command line usage
 
   Scenario: default behavior
     When I run devserver
-    Then I expect a http server is started on port "8000"
+    Then I expect a http server is started on port "8888"
+    And I expect cache-control to be "no-cache"
 
   Scenario: port configuration
     When I run devserver with the configuration:
@@ -16,3 +17,65 @@ Feature: Command line usage
       --port 8001
     """
     Then I expect a http server is started on port "8001"
+
+  Scenario: default https server
+    When I run devserver with the configuration:
+    """
+      --type https
+    """
+    Then I expect a https server is started on port "8443"
+
+  Scenario: configuring cache-control
+    When I run devserver with the configuration:
+    """
+      --cache no-store
+    """
+    Then I expect a http server is started on port "8888"
+    And I expect cache-control to be "no-store"
+
+  Scenario: configuring a different folder
+    When I run devserver with the configuration:
+    """
+      --folder ./test/assets
+    """
+    Then I expect the url "/options/" to exist
+    And I expect the url "/useIndex/" to exist
+    And I expect the url "/test.html" to exist
+
+  Scenario: loading configuration from an external file
+    Given an external configuration file named "configuration.json" with contents:
+    """
+    { "options" : { "type" : "https"
+                  , "port" : 8888
+                  , "base" : "."
+                  , "cache" : "no-cache"
+                  }
+    }
+    """
+    When I run devserver with the configuration:
+    """
+      --file configuration.json
+    """
+    Then I expect a https server is started on port "8888"
+    And I expect cache-control to be "no-cache"
+
+  Scenario: loading configuration from an external file
+    Given an external configuration file named "configuration.json" with contents:
+    """
+    { "options" : { "type" : "https"
+                  , "port" : 8882
+                  , "base" : "."
+                  , "cache" : "no-cache"
+                  }
+    , "debug" : { "type" : "http"
+                , "cache" : "public"
+                }
+    , "production" : { "port" : 80 }
+    }
+    """
+    When I run devserver with the configuration:
+    """
+      --file configuration.json --server debug
+    """
+    Then I expect a http server is started on port "8882"
+    And I expect cache-control to be "public"
