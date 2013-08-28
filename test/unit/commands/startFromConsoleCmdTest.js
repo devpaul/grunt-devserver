@@ -29,7 +29,7 @@ describe('startFromConsoleCmdTest', function() {
     }
 
     function createMockStartServer() {
-        startServerSpy = sinon.stub()
+        startServerSpy = sinon.stub().returns({})
         return startServerSpy
     }
 
@@ -45,7 +45,8 @@ describe('startFromConsoleCmdTest', function() {
             mockDependenciesForUnitUnderTest(getBasicServerRequires())
             cli = new Cli(['--help'])
             showHelpSpy = sinon.stub(Cli.prototype, 'showHelp')
-            startFromConsoleCmd(cli)
+            var promise = startFromConsoleCmd(cli)
+            expect(promise).to.be.undefined
         })
 
         afterEach(function() {
@@ -67,14 +68,18 @@ describe('startFromConsoleCmdTest', function() {
         })
 
         it('starts the server', function() {
-            startFromConsoleCmd()
-            expect(startServerSpy.calledOnce).to.be.true
+            assertCalledOnce(startFromConsoleCmd())
         })
+
+        function assertCalledOnce(promise) {
+            expect(startServerSpy.calledOnce).to.be.true
+            expect(promise).to.not.be.undefined
+        }
 
         it('starts the server with a custom Cli', function() {
             var cli = new Cli()
-            startFromConsoleCmd(cli)
-            expect(startServerSpy.calledOnce).to.be.true
+              , promise = startFromConsoleCmd(cli)
+            assertCalledOnce(promise);
         })
     })
 
@@ -84,6 +89,12 @@ describe('startFromConsoleCmdTest', function() {
         })
 
 
+        function assertCalledTwice(promise) {
+            expect(startServerSpy.calledTwice).to.be.true
+            expect(Array.isArray(promise)).to.be.true
+            expect(promise.length).to.be.equal(2)
+        }
+
         it('starts multiple defined servers', function() {
             var basic = { port: 80, server: ['assets', 'production'] }
               , multi = { options: {}, assets: {}, production: {} }
@@ -91,8 +102,7 @@ describe('startFromConsoleCmdTest', function() {
               , cli = { options: basic, isHelpRequested: function() { return false; }}
 
             loadCompleteOptions.returns(options)
-            startFromConsoleCmd(cli)
-            expect(startServerSpy.calledTwice).to.be.true
+            assertCalledTwice(startFromConsoleCmd(cli));
         })
 
         it('starts all servers in a multi server configuration', function() {
@@ -102,8 +112,7 @@ describe('startFromConsoleCmdTest', function() {
               , cli = { options: basic, isHelpRequested: function() { return false; }}
 
             loadCompleteOptions.returns(options)
-            startFromConsoleCmd(cli)
-            expect(startServerSpy.calledTwice).to.be.true
+            assertCalledTwice(startFromConsoleCmd(cli))
         })
 
         it('throws when one configuration does not exist', function() {
