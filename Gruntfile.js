@@ -21,7 +21,7 @@ module.exports = function(grunt) {
         grunt.registerTask('default', 'devserver')
         grunt.registerTask('lint', 'jshint')
         grunt.registerTask('unit', ['mochaTest:unit'])
-        grunt.registerTask('integration', ['devserver:e2e', 'mochaTest:integration'])
+        grunt.registerTask('integration', ['mochaTest:integration'])
         grunt.registerTask('functional', ['cucumberjs'])
         grunt.registerTask('test', ['lint', 'unit', 'integration', 'functional'])
     }
