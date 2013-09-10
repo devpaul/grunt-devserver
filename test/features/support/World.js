@@ -6,19 +6,21 @@ var request = require('supertest')
 World.prototype.getClient = getClient
 World.prototype.createConfigurationFile = createConfigurationFile
 World.prototype.getTempDir = getTempDir
+World.prototype.stopAllServers = stopAllServers
+
+module.exports = World
 
 function World(callback) {
-    this.servers = []
-    this.configFile = {}
-
+    this.interface = undefined
     callback()
 }
 
 function getClient(serverNum) {
-    var port, protocol
+    var servers = this.interface.servers
+      , port, protocol
     serverNum = serverNum || 0
-    port = this.servers[serverNum].config.port
-    protocol = this.servers[serverNum].config.type
+    port = servers[serverNum].config.port
+    protocol = servers[serverNum].config.type
     return request(protocol + '://localhost:' + port)
 }
 
@@ -32,9 +34,12 @@ function createConfigurationFile(name, contents) {
     var fullpath = path.join(this.getTempDir(), name)
 
     fs.writeFileSync(fullpath, contents)
-    this.configFile.name = name
-    this.configFile.path = fullpath
-    return this.configFile
+    return { name: name
+           , path: fullpath
+           }
 }
 
-module.exports = World
+function stopAllServers() {
+    if(this.interface && this.interface.servers)
+        this.interface.servers.forEach(function(server) { server.stop() })
+}
