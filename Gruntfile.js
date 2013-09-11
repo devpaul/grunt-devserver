@@ -1,5 +1,3 @@
-var path = require('path');
-
 module.exports = function(grunt) {
     initialize()
     loadTasks()
@@ -11,7 +9,7 @@ module.exports = function(grunt) {
     }
 
     function loadTasks() {
-        grunt.loadTasks(path.resolve('tasks'))
+        grunt.loadTasks('tasks')
         grunt.loadNpmTasks('grunt-contrib-jshint')
         grunt.loadNpmTasks('grunt-mocha-test')
         grunt.loadNpmTasks('grunt-cucumber')
