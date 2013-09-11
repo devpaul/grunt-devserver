@@ -5,6 +5,19 @@ var createServerCmd = require('../../../lib/commands/createServerCmd.js')
   , https = require('https')
 
 describe('createServerCmdTest', function() {
+    var expectedServer
+
+    beforeEach(function() {
+        expectedServer = {}
+        sinon.stub(http, 'createServer').returns(expectedServer)
+        sinon.stub(https, 'createServer').returns(expectedServer)
+    })
+
+    afterEach(function() {
+        http.createServer.restore()
+        https.createServer.restore()
+    })
+
     it('throws when config is not present', function() {
         expect(function() {
             createServerCmd()
@@ -18,49 +31,19 @@ describe('createServerCmdTest', function() {
         }).to.throw(Error)
     })
 
-    describe('create http server', function() {
-        var config
+    it('creates a http server', function() {
+        var config = new HttpConfig({})
+          , server = createServerCmd(config)
 
-        beforeEach(function() {
-            config = new HttpConfig()
-        })
-
-        it('creates server when config.type is set to http', function() {
-            var server = createServerCmd(config)
-
-            expect(server).to.exist
-            expect(server).to.be.an.instanceof(http.Server)
-        })
-
-        it('attaches middleware to request event', function() {
-            assertMiddlewareHandledRequest(config);
-        })
+        expect(server).to.be.equal(expectedServer)
+        expect(http.createServer.calledOnce).to.be.true
     })
 
-    describe('create https server', function() {
-        var config
+    it('creates a https server', function() {
+        var config = new HttpsConfig({})
+          , server = createServerCmd(config)
 
-        beforeEach(function() {
-            config = new HttpsConfig({})
-        })
-
-        it('creates server when config.type is set to https', function() {
-            var server = createServerCmd(config)
-
-            expect(server).to.exist
-            expect(server).to.be.an.instanceof(https.Server)
-        })
-
-        it('attaches middleware to request event', function() {
-            assertMiddlewareHandledRequest(config)
-        })
+        expect(server).to.be.equal(expectedServer)
+        expect(https.createServer.calledOnce).to.be.true
     })
-
-    function assertMiddlewareHandledRequest(config) {
-        var app = sinon.spy()
-          , server = new createServerCmd(config, app)
-
-        server.emit('request')
-        expect(app.calledOnce).to.be.true
-    }
 })
