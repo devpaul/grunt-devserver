@@ -9,3 +9,6 @@ chai.use(sinonChai)
 global.sinon = sinon
 global.chai = chai
 global.expect = require('chai').expect
+
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
