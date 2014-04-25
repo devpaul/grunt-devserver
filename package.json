@@ -1,6 +1,6 @@
 {
   "name": "grunt-devserver",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "a simple web server without caching for development",
   "homepage": "https://github.com/devpaul/grunt-devserver",
   "author": "Paul Shannon",
@@ -17,7 +17,7 @@
     "start": "node ./"
   },
   "dependencies": {
-    "express": ">=3.0",
+    "express": ">=3.0 <4",
     "optimist": ">=0.3",
     "pem": "~1.2.2",
     "q": "~0.9.3",
