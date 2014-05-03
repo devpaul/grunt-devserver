@@ -21,6 +21,7 @@ describe('contentServerTest', function() {
         it('serves folders', function(done) {
             request(app)
                 .get('/')
+                .set('Accept', 'application/json')
                 .expect(200, done)
         })
 

@@ -169,6 +169,9 @@ faster.
 When resolving issues or adding features please be sure to follow the [style guide] and make sure code is fully tested.
 
 ## Version Notes
+### 0.5.1
+ * Fixed Express dependency version to not break task [\#11][issue11]
+
 ### 0.5.0
  * Added grunt multitask support [\#8][issue8]
  * Added command line multi-server configuration [\#9][issue9]
