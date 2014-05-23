@@ -8,7 +8,7 @@ var SandboxedModule = require('sandboxed-module')
   , NO_CACHE_HEADERS_ID = 'noCache'
 
 describe('createMiddlewareCmdTest', function() {
-    var createExpressMiddleware, config, expressConstStub, noCacheHeadersStub
+    var createExpressMiddleware, config, expressConstStub, noCacheHeadersStub, serveStaticStub, serveIndexStub
 
     beforeEach(function() {
         config = new HttpConfig()
@@ -21,6 +21,9 @@ describe('createMiddlewareCmdTest', function() {
           , requires = { 'express' : mockExpress()
                        , '../middleware/corsSupport.js' : sinon.stub().returns(CORS_SUPPORT_ID)
                        , '../middleware/noCacheHeaders.js' : noCacheHeadersStub = sinon.stub().returns(NO_CACHE_HEADERS_ID)
+                       , 'morgan': sinon.stub().returns(LOGGER_ID)
+                       , 'serve-static': (serveStaticStub = sinon.stub().returns(STATIC_ID))
+                       , 'serve-index': (serveIndexStub = sinon.stub().returns(DIRECTORY_ID))
                        }
 
         createExpressMiddleware = SandboxedModule.require(UNIT_UNDER_TEST_PATH, { requires: requires })
@@ -29,9 +32,6 @@ describe('createMiddlewareCmdTest', function() {
     function mockExpress() {
         var expressMock = { use : sinon.stub() }
         expressConstStub = sinon.stub().returns(expressMock)
-        expressConstStub.logger = sinon.stub().returns(LOGGER_ID)
-        expressConstStub.directory = sinon.stub().returns(DIRECTORY_ID)
-        expressConstStub.static = sinon.stub().returns(STATIC_ID)
         return expressConstStub
     }
 
@@ -73,7 +73,7 @@ describe('createMiddlewareCmdTest', function() {
         var folder = path.resolve(config.folder)
 
         createExpressMiddleware(config)
-        expect(expressConstStub.directory.calledWith(folder)).to.be.true
-        expect(expressConstStub.static.calledWith(folder)).to.be.true
+        expect(serveIndexStub.calledWith(folder)).to.be.true
+        expect(serveStaticStub.calledWith(folder)).to.be.true
     })
 })
