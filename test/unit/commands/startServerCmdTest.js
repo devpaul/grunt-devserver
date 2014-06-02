@@ -43,7 +43,7 @@ describe('startServerCmdTest', function() {
           , promise = startServerCmd(options)
           , assertPromise = promise.then(function() {
             expect(ServerSpy.called).to.be.true
-            expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT_PORT)
+            expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT.port)
             expect(ServerSpy.startServerStub.calledOnce).to.be.true
         })
 

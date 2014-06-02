@@ -47,7 +47,7 @@ describe('buildConfig', function() {
                 var options = { type : type
                               , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('port', clazz.DEFAULT_PORT, options).and.notify(done)
+                assertConfigValueSet('port', clazz.DEFAULT.port, options).and.notify(done)
             })
 
             it(type + ' overrides the server port from options', function(done) {
@@ -63,7 +63,7 @@ describe('buildConfig', function() {
                 var options = { type : type
                               , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('folder', clazz.DEFAULT_FOLDER, options).and.notify(done)
+                assertConfigValueSet('folder', clazz.DEFAULT.folder, options).and.notify(done)
             })
 
             it(type + ' overrides the folder from options', function(done) {
@@ -79,7 +79,7 @@ describe('buildConfig', function() {
                 var options = { type : type
                               , httpsOptions : {} // speeds up https case, ignored by http case
                               }
-                assertConfigValueSet('cacheControl', clazz.DEFAULT_CACHE_CONTROL, options).and.notify(done)
+                assertConfigValueSet('cacheControl', clazz.DEFAULT.cacheControl, options).and.notify(done)
             })
 
             it(type + ' overrides the cache method from options', function(done) {

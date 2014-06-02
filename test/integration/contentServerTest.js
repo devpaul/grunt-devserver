@@ -45,7 +45,7 @@ describe('contentServerTest', function() {
         })
 
         it('adds no-cache headers', function(done) {
-            assertExpectedCacheHeaders(app, HttpConfig.DEFAULT_CACHE_CONTROL, done)
+            assertExpectedCacheHeaders(app, HttpConfig.DEFAULT.cacheControl, done)
         })
 
         it('replies 304 for cached content', function(done) {
