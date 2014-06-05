@@ -1,6 +1,6 @@
 var buildConfigFromOptions = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
-  , HttpConfig = require('../../../lib/model/HttpConfig.js')
-  , HttpsConfig = require('../../../lib/model/HttpsConfig.js')
+  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
+  , HttpsConfig = require('../../../lib/model/config/HttpsConfig.js')
   , serverTypes = require('../../../lib/model/data/serverTypes.json')
 
 describe('buildConfig', function() {

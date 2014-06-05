@@ -1,5 +1,5 @@
 var SandboxedModule = require('sandboxed-module')
-  , HttpConfig = require('../../../lib/model/HttpConfig.js')
+  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
   , buildConfigFromOptionsCmd = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
 
 describe('startServerCmdTest', function() {

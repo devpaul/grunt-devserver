@@ -1,7 +1,7 @@
 var request = require('supertest')
   , path = require('path')
   , createExpressMiddleware = require('../../lib/commands/createMiddlewareCmd.js')
-  , HttpConfig = require('../../lib/model/HttpConfig.js')
+  , HttpConfig = require('../../lib/model/config/HttpConfig.js')
 
 describe('contentServerTest', function() {
     var config

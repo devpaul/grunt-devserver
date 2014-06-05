@@ -1,5 +1,5 @@
-var Config = require('../../../lib/model/HttpsConfig.js')
-  , serverTypes = require('../../../lib/model/data/serverTypes.json')
+var Config = require('../../../../lib/model/config/HttpsConfig.js')
+  , serverTypes = require('../../../../lib/model/data/serverTypes.json')
   , configTestHelper = require('./configTestHelper')
 
 describe('HttpsConfigTest', function() {

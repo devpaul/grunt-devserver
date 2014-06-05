@@ -1,6 +1,6 @@
 var path = require('path')
   , Server = require('../../../lib/controller/Server.js')
-  , HttpConfig = require('../../../lib/model/HttpConfig.js')
+  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
 
 describe('ServerTest', function() {
     var config
