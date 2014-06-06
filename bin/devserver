@@ -11,4 +11,4 @@ if (!fs.existsSync(dir)) {
   dir = path.join('..')
 }
 
-require(path.join(dir, 'lib', 'commands', 'startFromConsoleCmd.js'))()
+require(path.join(dir, 'lib', 'cli', 'commands', 'startFromConsoleCmd.js'))()

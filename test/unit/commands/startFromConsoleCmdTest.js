@@ -1,9 +1,9 @@
 var SandboxedModule = require('sandboxed-module')
-  , Cli = require('../../../lib/controller/Cli.js')
+  , Cli = require('../../../lib/cli/controller/Cli.js')
   , CompositeOptions = require('../../../lib/model/CompositeOptions.js')
   , BasicOptions = require('../../../lib/model/BasicOptions.js')
   , MultiOptions = require('../../../lib/model/MultiOptions.js')
-  , START_FROM_CONSOLE_CMD_PATH = '../../../lib/commands/startFromConsoleCmd'
+  , START_FROM_CONSOLE_CMD_PATH = '../../../lib/cli/commands/startFromConsoleCmd'
 
 describe('startFromConsoleCmdTest', function() {
     var startServerSpy, startFromConsoleCmd, loadCompleteOptions
@@ -12,37 +12,18 @@ describe('startFromConsoleCmdTest', function() {
         startFromConsoleCmd = require(START_FROM_CONSOLE_CMD_PATH)
     })
 
-    function mockDependenciesForUnitUnderTest(requires) {
-        var options = { requires : requires }
-        startFromConsoleCmd = SandboxedModule.require(START_FROM_CONSOLE_CMD_PATH, options)
-    }
-
-    function getBasicServerRequires() {
-        return { './startServerCmd.js' : createMockStartServer()
-               }
-    }
-
-    function getMultiServerRequires() {
-        return { './startServerCmd.js' : createMockStartServer()
-               , './loadCompleteOptionsCmd.js' : createMockLoadOptions()
-               }
-    }
-
-    function createMockStartServer() {
-        startServerSpy = sinon.stub().returns({})
-        return startServerSpy
-    }
-
-    function createMockLoadOptions() {
-        loadCompleteOptions = sinon.stub()
-        return loadCompleteOptions;
+    function mockDependenciesForUnitUnderTest() {
+        var requires = { '../../commands/startServerCmd' : startServerSpy = sinon.stub().returns({})
+                       , '../../commands/loadCompleteOptionsCmd' : loadCompleteOptions = sinon.stub().returns(new BasicOptions())
+                       }
+        startFromConsoleCmd = SandboxedModule.require(START_FROM_CONSOLE_CMD_PATH, { requires : requires })
     }
 
     describe('help', function() {
         var cli, showHelpSpy
 
         beforeEach(function() {
-            mockDependenciesForUnitUnderTest(getBasicServerRequires())
+            mockDependenciesForUnitUnderTest()
             cli = new Cli(['--help'])
             showHelpSpy = sinon.stub(Cli.prototype, 'showHelp')
             var promise = startFromConsoleCmd(cli)
@@ -64,7 +45,7 @@ describe('startFromConsoleCmdTest', function() {
 
     describe('basic configuration', function() {
         beforeEach(function() {
-            mockDependenciesForUnitUnderTest(getBasicServerRequires())
+            mockDependenciesForUnitUnderTest()
         })
 
         it('starts the server', function() {
@@ -85,7 +66,7 @@ describe('startFromConsoleCmdTest', function() {
 
     describe('multiserver configuration', function() {
         beforeEach(function() {
-            mockDependenciesForUnitUnderTest(getMultiServerRequires())
+            mockDependenciesForUnitUnderTest()
         })
 
 

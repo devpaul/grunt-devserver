@@ -1,6 +1,6 @@
 var Q = require('q')
-  , Cli = require('../../../lib/controller/Cli.js')
-  , startFromConsoleCmd = require('../../../lib/commands/startFromConsoleCmd.js')
+  , Cli = require('../../../lib/cli/controller/Cli')
+  , startFromConsoleCmd = require('../../../lib/cli/commands/startFromConsoleCmd')
 
 cliInterface.prototype.run = run
 cliInterface.prototype._startWithParameters = startWithParameters
