@@ -1,4 +1,4 @@
-var Cli = require('../../../lib/cli/controller/Cli.js')
+var Cli = require('../../../../lib/cli/controller/Cli.js')
 
 describe('CliTest', function() {
     describe('construction', function() {

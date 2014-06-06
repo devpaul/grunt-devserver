@@ -1,6 +1,6 @@
-var createServerCmd = require('../../../lib/commands/createServerCmd.js')
-  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
-  , HttpsConfig = require('../../../lib/model/config/HttpsConfig.js')
+var createServerCmd = require('../../../../lib/commands/createServerCmd.js')
+  , HttpConfig = require('../../../../lib/model/config/HttpConfig.js')
+  , HttpsConfig = require('../../../../lib/model/config/HttpsConfig.js')
   , http = require('http')
   , https = require('https')
 
