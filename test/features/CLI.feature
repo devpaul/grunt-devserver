@@ -59,6 +59,26 @@ Feature: Command line usage
     Then I expect a https server is started on port "8888"
     And I expect cache-control to be "no-cache"
 
+  Scenario: custom middleware
+    Given an external configuration file named "configuration.js" with contents:
+    """
+    var path = require('path')
+    var middlewarePath = path.join(process.cwd(), 'test/features/support/customMiddleware')
+    console.log(middlewarePath)
+    var options = { "type" : "http"
+                  , "port" : 8889
+                  , "base" : "."
+                  , "middleware" : [ require(middlewarePath)() ]
+                  }
+    exports.options = options
+    """
+    When I run devserver with the configuration:
+    """
+      --file configuration.js
+    """
+    Then I expect a http server is started on port "8889"
+    And I expect the url "/" to exist
+
   Scenario: loading configuration from an external file
     Given an external configuration file named "configuration.json" with contents:
     """

@@ -90,6 +90,16 @@ describe('buildConfig', function() {
                               }
                 assertConfigValueSet('cacheControl', expected, options).and.notify(done)
             })
+
+            it(type + ' uses the middleware from options', function(done) {
+                var expected = []
+                  , options = { type : type
+                              , middleware : expected
+                              , httpsOptions: {} // speeds up https case, ignored by http case
+                              }
+
+                assertConfigValueSet('middleware', expected, options).and.notify(done)
+            })
         })
     })
 })
