@@ -46,7 +46,7 @@
     "grunt": "~0.4.0"
   },
   "engine": {
-    "node": ">=0.8"
+    "node": ">=0.10"
   },
   "bin": {
     "devserver": "./bin/devserver"
