@@ -1,9 +1,10 @@
 var SandboxedModule = require('sandboxed-module')
   , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
   , path = require('path')
+  , Route = require('../../../lib/model/Route.js')
 
 describe('createMiddlewareCmdTest', function() {
-    var createExpressMiddleware, config, expressConstStub, expressUseStub
+    var createExpressMiddleware, config, expressConstStub, expressUseStub, expressRouteStub
 
     beforeEach(function() {
         var unitUnderTestPath = '../../../lib/commands/createMiddlewareCmd.js'
@@ -16,7 +17,10 @@ describe('createMiddlewareCmdTest', function() {
     })
 
     function mockExpress() {
-        var expressMock = { use : expressUseStub = sinon.stub() }
+        var expressMock = { use : expressUseStub = sinon.stub()
+                            // we're returning a new Route since our Route behaves similar to express'
+                          , route : expressRouteStub = sinon.stub().returns(new Route('/'))
+                          }
         expressConstStub = sinon.stub().returns(expressMock)
         return expressConstStub
     }
@@ -34,7 +38,7 @@ describe('createMiddlewareCmdTest', function() {
     })
 
     it('executes a middleware factory function', function() {
-        var middleware = ['one', 'two', 'three']
+        var middleware = [sinon.stub(), sinon.stub(), sinon.stub()]
           , config = stubMiddlewareFunction(middleware)
 
         createExpressMiddleware(config)
@@ -47,7 +51,7 @@ describe('createMiddlewareCmdTest', function() {
     }
 
     it('adds middleware from a factory function', function() {
-        var middleware = ['one', 'two', 'three']
+        var middleware = [sinon.stub(), sinon.stub(), sinon.stub()]
           , config = stubMiddlewareFunction(middleware)
 
         createExpressMiddleware(config)
@@ -61,7 +65,7 @@ describe('createMiddlewareCmdTest', function() {
     }
 
     it('adds middleware from an array', function() {
-        var middleware = ['one', 'two', 'three']
+        var middleware = [sinon.stub(), sinon.stub(), sinon.stub()]
           , config = { middleware: middleware }
 
         createExpressMiddleware(config)
@@ -79,5 +83,52 @@ describe('createMiddlewareCmdTest', function() {
         var app = createExpressMiddleware(config)
 
         expect(app).to.be.equal(expressConstStub())
+    })
+
+    it('throws for an invalid middleware item', function() {
+        config.middleware = 'invalid middleware item'
+        expect(function() {
+            createExpressMiddleware(config)
+        }).to.throw()
+    })
+
+    it('adds a route without an action', function() {
+        var route = new Route('/')
+
+        config.middleware = [route]
+        createExpressMiddleware(config)
+        expect(expressRouteStub.calledOnce).to.be.true
+    })
+
+    it('adds a route with a single action', function() {
+        var route = new Route('/').get(function () {})
+
+        config.middleware = [route]
+        createExpressMiddleware(config)
+        expect(expressRouteStub.calledOnce).to.be.true
+    })
+
+    it('adds a route with multiple actions', function() {
+        var route = new Route('/').get(function () {}).all(function() {})
+        var stubRoute = { get: sinon.stub()
+                        , all: sinon.stub()
+                        }
+
+        expressRouteStub.returns(stubRoute)
+        config.middleware = [route]
+        createExpressMiddleware(config)
+        expect(expressRouteStub.calledOnce).to.be.true
+        expect(stubRoute.get.calledOnce).to.be.true
+        expect(stubRoute.all.calledOnce).to.be.true
+    })
+
+    it('adds a mixed list of routes and callback middleware', function() {
+        config.middleware = [ new Route('/').get(function() {})
+                            , function() {}
+                            ]
+
+        createExpressMiddleware(config)
+        expect('/').to.be.equal(expressRouteStub.firstCall.args[0])
+        expect(config.middleware[1]).to.be.equal(expressUseStub.firstCall.args[0])
     })
 })

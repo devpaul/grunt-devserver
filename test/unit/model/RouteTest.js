@@ -47,11 +47,13 @@ describe('RouteTest', function() {
 
     function assertVerbMethod(route, verb, callback) {
         var length = route.actions.length
+        var self = route[verb](callback)
 
-        route[verb](callback)
         expect(route.actions.length).to.be.equal(length + 1)
         expect(verb).to.be.equal(route.actions[length].verb)
         expect(callback).to.be.equal(route.actions[length].callback)
+        // all verb methods should support chaining
+        expect(self).to.be.equal(route)
     }
 
     describe('.isRoute', function() {

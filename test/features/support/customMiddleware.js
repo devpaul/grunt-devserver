@@ -7,5 +7,6 @@ function middleware(req, res, next) {
 
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Content-Length', msg.length);
-    res.end(msg, 200);
+    res.status(200);
+    res.send(msg);
 }
