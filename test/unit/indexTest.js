@@ -16,6 +16,10 @@ describe('indexTest', function() {
             expect(devserver.BasicOptions).to.be.a('function')
             expect(devserver.MultiOptions).to.be.a('function')
             expect(devserver.CompositeOptions).to.be.a('function')
+            expect(devserver.middleware).to.be.a('object')
+            expect(devserver.middleware.corsSupport).to.be.a('function')
+            expect(devserver.middleware.noCacheHeaders).to.be.a('function')
+            expect(devserver.middleware.route).to.be.a('function')
         })
     })
 

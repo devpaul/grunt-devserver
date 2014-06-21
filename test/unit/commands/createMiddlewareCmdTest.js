@@ -1,7 +1,7 @@
 var SandboxedModule = require('sandboxed-module')
-  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
+  , HttpConfig = require('../../../lib/model/config/HttpConfig')
   , path = require('path')
-  , Route = require('../../../lib/model/Route.js')
+  , Route = require('../../../lib/model/middleware/Route')
 
 describe('createMiddlewareCmdTest', function() {
     var createExpressMiddleware, config, expressConstStub, expressUseStub, expressRouteStub

@@ -1,5 +1,5 @@
 var methods = require('methods')
-  , Route = require('../../../lib/model/Route')
+  , Route = require('../../../lib/model/middleware/Route')
   , route = Route
 
 describe('RouteTest', function() {
