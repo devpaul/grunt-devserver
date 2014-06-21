@@ -1,6 +1,6 @@
 {
   "name": "grunt-devserver",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "a simple web server without caching for development",
   "homepage": "https://github.com/devpaul/grunt-devserver",
   "author": "Paul Shannon",
@@ -19,7 +19,7 @@
   "dependencies": {
     "express": "~4.3.0",
     "morgan": "~1.1.1",
-    "optimist": ">=0.3",
+    "optimist": "~0.3",
     "pem": "~1.2.2",
     "q": "~0.9.3",
     "serve-index": "~1.0.3",
@@ -29,18 +29,18 @@
   },
   "devDependencies": {
     "grunt": "~0.4.0",
-    "mocha": "*",
-    "chai": "*",
-    "sinon": "*",
-    "sinon-chai": "*",
-    "supertest": "*",
-    "sandboxed-module": "*",
+    "mocha": "^1.20.1",
+    "chai": "^1.9.1",
+    "sinon": "^1.10.2",
+    "sinon-chai": "^2.5.0",
+    "supertest": "^0.13.0",
+    "sandboxed-module": "^1.0.0",
     "grunt-mocha-test": "~0.2.0",
     "grunt-contrib-jshint": "~0.3.0",
     "chai-as-promised": "~3.3.1",
     "cucumber": "0.4.0",
-    "grunt-cucumber": "~0.2.1",
-    "temporary": "0.0.5"
+    "grunt-cucumber": "~0.2.3",
+    "temporary": "0.0.8"
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
