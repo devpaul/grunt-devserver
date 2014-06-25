@@ -3,7 +3,7 @@ var SandboxedModule = require('sandboxed-module')
 
 describe('CommonConfigTest', function() {
     describe('defaultMiddleware', function() {
-        var Config, morganStub, serveStaticStub, serveIndexStub
+        var CommonConfig, morganStub, serveStaticStub, serveIndexStub
           , corsSupportStub, noCacheHeadersStub, pathStub, mockImpl
 
         beforeEach(function() {
@@ -18,32 +18,69 @@ describe('CommonConfigTest', function() {
             mockImpl = { folder: 'folder'
                        , cacheControl : 'cacheControl'
                        }
-            Config = SandboxedModule.require(unitUnderTestPath, { requires: requires })
+            CommonConfig = SandboxedModule.require(unitUnderTestPath, { requires: requires })
         })
 
-        it('is correctly prototyped', function() {
-            expect(Config.defaultMiddleware).to.exist
-            expect(Config.defaultMiddleware).to.be.a('function')
+        describe('constructor', function() {
+            it('constructs without options', function() {
+                var config = new CommonConfig()
+                assertDefaults(config)
+            })
+
+            function assertDefaults(config) {
+                for(var key in CommonConfig._DEFAULT) {
+                    var value = CommonConfig._DEFAULT[key]
+                    expect(config[key]).to.be.equal(value)
+                }
+            }
+
+            it('constructs with empty options', function() {
+                var options = { random: Math.random() }
+                  , config = new CommonConfig(options)
+
+                assertDefaults(config)
+                expect(config.port).to.be.undefined
+                expect(config.base).to.be.undefined
+                expect(config.options).to.deep.equal(options)
+            })
+
+            it('constructs with options', function() {
+                var options = { port: 1234
+                              , base: 'base'
+                              , cache: 'cacheControl'
+                              , middleware: ['middleware']
+                              }
+                  , config = new CommonConfig(options)
+
+                expect(config.port).to.be.equal(options.port)
+                expect(config.folder).to.be.equal(options.base)
+                expect(config.cacheControl).to.be.equal(options.cache)
+                expect(config.middleware).to.be.equal(options.middleware)
+            })
         })
 
-        it('creates a list of middleware', function () {
-            var middleware = Config.defaultMiddleware.call(mockImpl)
+        describe('middleware', function() {
+            it('creates a list of middleware', function () {
+                var middleware = CommonConfig._defaultMiddleware.call(mockImpl)
 
-            expect(util.isArray(middleware)).to.be.true
-            expect(middleware.length).to.be.equal(5)
-            expect(morganStub.called).to.be.true
-            expect(serveStaticStub.called).to.be.true
-            expect(serveIndexStub.called).to.be.true
-            expect(corsSupportStub.called).to.be.true
-            expect(noCacheHeadersStub.called).to.be.true
-            expect(noCacheHeadersStub.firstCall.args[0]).to.be.equal(mockImpl.cacheControl)
+                expect(util.isArray(middleware)).to.be.true
+                expect(middleware.length).to.be.equal(5)
+                expect(morganStub.called).to.be.true
+                expect(serveStaticStub.called).to.be.true
+                expect(serveIndexStub.called).to.be.true
+                expect(corsSupportStub.called).to.be.true
+                expect(noCacheHeadersStub.called).to.be.true
+                expect(noCacheHeadersStub.firstCall.args[0]).to.be.equal(mockImpl.cacheControl)
+            })
+
+            it('puts serve-index after serve-static', function() {
+                CommonConfig._defaultMiddleware.call(mockImpl)
+
+                expect(serveStaticStub.called).to.be.true
+                expect(serveIndexStub.calledAfter(serveStaticStub)).to.be.true
+            })
         })
 
-        it('puts serve-index after serve-static', function() {
-            Config.defaultMiddleware.call(mockImpl)
 
-            expect(serveStaticStub.called).to.be.true
-            expect(serveIndexStub.calledAfter(serveStaticStub)).to.be.true
-        })
     })
 })

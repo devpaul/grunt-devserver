@@ -1,30 +1,40 @@
-var Config = require('../../../../lib/model/config/HttpConfig.js')
+var SandboxedModule = require('sandboxed-module')
   , serverTypes = require('../../../../lib/model/data/serverTypes.json')
-  , configTestHelper = require('./configTestHelper')
 
 describe('HttpConfigTest', function() {
+    var CommonConfigStub, HttpConfig
+
+    beforeEach(function() {
+        var unitUnderTestPath = '../../../../lib/model/config/HttpConfig.js'
+          , requires = { './CommonConfig': CommonConfigStub = sinon.stub() }
+
+        HttpConfig = SandboxedModule.require(unitUnderTestPath, { requires: requires })
+    })
+
     describe('construction', function() {
-        it('is constructed correctly with defaults', function() {
-            var config = new Config()
-            assertProperlyConstructed(config)
+        it('extends CommonConfig', function() {
+            var config = new HttpConfig()
+            expect(config).to.be.an.instanceof(CommonConfigStub)
         })
 
-        it('is prototyped correctly', function() {
-            expect(Config.DEFAULT).to.exist
-            expect(Config.DEFAULT.port).to.be.equal(8888)
-            expect(Config.DEFAULT.folder).to.be.equal(process.cwd())
-            expect(Config.DEFAULT.cacheControl).to.be.equal('no-cache')
+        it('constructor calls CommonConfig constructor', function() {
+            var options = {}
+
+            new HttpConfig(options)
+            expect(CommonConfigStub.calledOnce).to.be.true
+            expect(CommonConfigStub.firstCall.args[0]).to.deep.equal(options)
         })
 
-        function assertProperlyConstructed(config) {
-            configTestHelper.expectedConfigurationOptions(config)
-            expect(config).to.exist
-            expect(config).to.be.an.instanceof(Config)
+        it('adds default options', function() {
+            var config = new HttpConfig()
+
+            expect(config.port).to.be.equal(HttpConfig._DEFAULT.port)
+        })
+
+        it('sets the type', function() {
+            var config = new HttpConfig()
+
             expect(config.type).to.be.equal(serverTypes.HTTP)
-            expect(config.port).to.be.equal(Config.DEFAULT.port)
-            expect(config.port).to.be.equal(Config.DEFAULT.port)
-            expect(config.folder).to.be.equal(Config.DEFAULT.folder)
-            expect(config.cacheControl).to.be.equal(Config.DEFAULT.cacheControl)
-        }
+        })
     })
 });
