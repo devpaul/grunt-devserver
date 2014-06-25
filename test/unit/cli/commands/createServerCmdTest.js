@@ -4,7 +4,7 @@ var createServerCmd = require('../../../../lib/commands/createServerCmd.js')
   , http = require('http')
   , https = require('https')
 
-describe.only('createServerCmdTest', function() {
+describe('createServerCmdTest', function() {
     var expectedServer
 
     beforeEach(function() {
