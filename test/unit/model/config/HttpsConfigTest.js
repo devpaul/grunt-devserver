@@ -1,7 +1,7 @@
 var SandboxedModule = require('sandboxed-module')
   , serverTypes = require('../../../../lib/model/data/serverTypes.json')
 
-describe.only('HttpsConfigTest', function() {
+describe('HttpsConfigTest', function() {
     var CommonConfigStub, HttpsConfig, defaultOptions
 
     beforeEach(function() {
