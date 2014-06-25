@@ -4,7 +4,7 @@ var createServerCmd = require('../../../../lib/commands/createServerCmd.js')
   , http = require('http')
   , https = require('https')
 
-describe('createServerCmdTest', function() {
+describe.only('createServerCmdTest', function() {
     var expectedServer
 
     beforeEach(function() {
@@ -18,32 +18,38 @@ describe('createServerCmdTest', function() {
         https.createServer.restore()
     })
 
-    it('throws when config is not present', function() {
-        expect(function() {
-            createServerCmd()
-        }).to.throw(Error)
+    it('rejects when config is not present', function() {
+        var promise = createServerCmd()
+
+        expect(promise).to.be.rejected
+        return promise
     })
 
-    it('throws when config.type is present and unsupported', function() {
+    it('rejects when config.type is present and unsupported', function() {
         var config = { type : 'badType' }
-        expect(function() {
-            createServerCmd(config)
-        }).to.throw(Error)
+        var promise = createServerCmd(config)
+
+        expect(promise).to.be.rejected
+        return promise
     })
 
     it('creates a http server', function() {
         var config = new HttpConfig({})
-          , server = createServerCmd(config)
+          , promise = createServerCmd(config)
 
-        expect(server).to.be.equal(expectedServer)
-        expect(http.createServer.calledOnce).to.be.true
+        expect(promise).to.eventually.equal(expectedServer)
+        return promise.then(function () {
+            expect(http.createServer.calledOnce).to.be.true
+        })
     })
 
     it('creates a https server', function() {
         var config = new HttpsConfig({})
-          , server = createServerCmd(config)
+          , promise = createServerCmd(config)
 
-        expect(server).to.be.equal(expectedServer)
-        expect(https.createServer.calledOnce).to.be.true
+        expect(promise).to.eventually.equal(expectedServer)
+        return promise.then(function () {
+            expect(https.createServer.calledOnce).to.be.true
+        })
     })
 })
