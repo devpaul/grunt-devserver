@@ -1,59 +1,59 @@
 var SandboxedModule = require('sandboxed-module')
-  , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
-  , buildConfigFromOptionsCmd = require('../../../lib/commands/buildConfigFromOptionsCmd.js')
+var Q = require('q')
 
 describe('startServerCmdTest', function() {
-    var startServerCmd, ServerSpy, buildConfigSpy
+    var startServerCmd, buildServerStub, httpStub, httpsStub, buildServerDefer, serverStub
 
     beforeEach(function() {
-        mockDependenciesForUnitUnderTest()
+        var requires
+
+        serverStub = { start: sinon.stub() }
+        buildServerDefer = Q.defer()
+        buildServerStub = sinon.stub().returns(buildServerDefer.promise)
+        requires =  { '../model/config/HttpConfig.js': httpStub = sinon.stub()
+                    , '../model/config/HttpsConfig.js': httpsStub = sinon.stub()
+                    , './buildServerCmd.js': buildServerStub
+                    }
+
+        startServerCmd = SandboxedModule.require('../../../lib/commands/startServerCmd', { requires: requires })
     })
 
-    function mockDependenciesForUnitUnderTest() {
-        var options = { requires : { '../controller/Server.js' : createMockServerClass()
-                                   , './buildConfigFromOptionsCmd.js' : createBuildConfigSpy()
-                                   }
-                      }
-        startServerCmd = SandboxedModule.require('../../../lib/commands/startServerCmd', options)
-    }
+    it('creates a new http server', function() {
+        var options = { type: 'http' }
+        var promise = startServerCmd(options)
 
-    function createBuildConfigSpy() {
-        buildConfigSpy = sinon.spy(buildConfigFromOptionsCmd)
-        return buildConfigSpy
-    }
+        buildServerDefer.resolve(serverStub)
 
-    function createMockServerClass() {
-        var startServerStub = sinon.stub()
-        ServerSpy = sinon.stub().returns({ start: startServerStub })
-        ServerSpy.startServerStub = startServerStub
-        return ServerSpy
-    }
-
-    it('creates a new server', function(done) {
-        var options = {}
-          , promise = startServerCmd(options)
-        expect(promise.then(function(server) {
-            expect(ServerSpy.calledOnce).to.be.true
-            expect(server).to.be.equal(new ServerSpy())
-        })).to.be.fulfilled.notify(done)
+        expect(httpStub.called).to.be.true
+        return expect(promise).to.eventually.equal(serverStub)
     })
 
-    it('automatically starts the server on the configured port', function(done) {
-        var options = {}
-          , promise = startServerCmd(options)
-          , assertPromise = promise.then(function() {
-            expect(ServerSpy.called).to.be.true
-            expect(ServerSpy.firstCall.args[0].port).to.equal(HttpConfig.DEFAULT.port)
-            expect(ServerSpy.startServerStub.calledOnce).to.be.true
+    it('creates a new https server', function() {
+        var options = { type: 'https' }
+        var promise = startServerCmd(options)
+
+        buildServerDefer.resolve(serverStub)
+
+        expect(httpsStub.called).to.be.true
+        return expect(promise).to.eventually.equal(serverStub)
+    })
+
+    it('automatically starts the server', function() {
+        var options = { type: 'http' }
+        var promise = startServerCmd(options)
+
+        buildServerDefer.resolve(serverStub)
+
+        return promise.then(function () {
+            expect(serverStub.start.called).to.be.true
         })
-
-        expect(assertPromise).notify(done)
     })
 
-    it('hands off options to build Config', function() {
-        var options = {}
-        startServerCmd(options)
-        expect(buildConfigSpy.calledOnce).to.be.true;
-        expect(buildConfigSpy.firstCall.args[0]).to.deep.equal(options)
+    it('rejects when server promise rejects', function() {
+        var promise = startServerCmd({})
+
+        buildServerDefer.reject()
+
+        return expect(promise).to.eventually.be.rejected
     })
 })

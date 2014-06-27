@@ -29,8 +29,10 @@ describe('CommonConfigTest', function() {
 
             function assertDefaults(config) {
                 for(var key in CommonConfig._DEFAULT) {
-                    var value = CommonConfig._DEFAULT[key]
-                    expect(config[key]).to.be.equal(value)
+                    if(CommonConfig._DEFAULT.hasOwnProperty(key)) {
+                        var value = CommonConfig._DEFAULT[key]
+                        expect(config[key]).to.be.equal(value)
+                    }
                 }
             }
 
