@@ -1,9 +1,9 @@
 var SandboxedModule = require('sandboxed-module')
-  , Cli = require('../../../lib/cli/controller/Cli.js')
-  , CompositeOptions = require('../../../lib/model/CompositeOptions.js')
-  , BasicOptions = require('../../../lib/model/BasicOptions.js')
-  , MultiOptions = require('../../../lib/model/MultiOptions.js')
-  , START_FROM_CONSOLE_CMD_PATH = '../../../lib/cli/commands/startFromConsoleCmd'
+  , Cli = require('../../../../lib/cli/controller/Cli.js')
+  , CompositeOptions = require('../../../../lib/model/CompositeOptions.js')
+  , BasicOptions = require('../../../../lib/model/BasicOptions.js')
+  , MultiOptions = require('../../../../lib/model/MultiOptions.js')
+  , START_FROM_CONSOLE_CMD_PATH = '../../../../lib/cli/commands/startFromConsoleCmd'
 
 describe('startFromConsoleCmdTest', function() {
     var startServerSpy, startFromConsoleCmd, loadCompleteOptions
