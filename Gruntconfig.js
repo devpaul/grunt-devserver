@@ -1,7 +1,6 @@
 
 module.exports = { devserver: getDevServerOptions()
                  , mochaTest: getMochaTestOptions()
-                 , mochaTestConfig: getMochaTestConfigOptions()
                  , jshint: getJshintOptions()
                  , cucumberjs : getCucumberOptions()
                  }
@@ -29,17 +28,13 @@ function getDevServerOptions() {
 }
 
 function getMochaTestOptions() {
-    return { unit: ['./test/unit/**/*Test.js']
-           , integration: ['./test/integration/**/*Test.js']
-           }
-}
-
-function getMochaTestConfigOptions() {
     return { options: { ui: 'bdd'
-                      , reporter: 'spec'
-                      , noColors: true
-                      , require: 'test/common'
-                      }
+        , reporter: 'spec'
+        , noColors: true
+        , require: 'test/common'
+    },
+        unit: ['./test/unit/**/*Test.js']
+           , integration: ['./test/integration/**/*Test.js']
            }
 }
 

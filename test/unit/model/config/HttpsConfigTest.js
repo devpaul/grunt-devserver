@@ -50,10 +50,9 @@ describe('HttpsConfigTest', function() {
             var config = new HttpsConfig()
 
             this.timeout(5000)
-            return expect(config.httpsOptions).to.be.fulfilled
+            return expect(config.httpsOptions).to.eventually.be.fulfilled
                 .and.to.exist
-                .and.have.deep.property('key')
-                .and.have.deep.property('cert')
+                .and.to.include.keys('cert', 'key')
         })
     })
 });
