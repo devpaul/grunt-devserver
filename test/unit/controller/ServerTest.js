@@ -3,80 +3,77 @@ var path = require('path')
   , HttpConfig = require('../../../lib/model/config/HttpConfig.js')
 
 describe('ServerTest', function() {
-    var config
+    var config, httpServer
 
     beforeEach(function() {
         config = new HttpConfig()
         config.folder = path.resolve(path.join(__dirname, '../assets'))
+        httpServer = { listen: sinon.stub()
+                     , close: sinon.stub()
+                     }
     })
 
     describe('construction', function() {
-        it('is properly constructed with minimal arguments', function() {
-            var server = new Server(config)
-            assertProperlyConstructed(server, config)
-        })
-
-        it('is properly constructed with optional server argument', function() {
-            var httpserver = {}
-              , server = new Server(config, httpserver)
-
-            assertProperlyConstructed(server, config)
-            expect(server.httpServer).to.be.equal(httpserver)
-        })
-
-        it('is properly constructed with optional app argument', function() {
+        it('is properly constructed', function() {
             var app = function() {}
-              , server = new Server(config, undefined, app)
+            var httpserver = {}
+            var server = new Server(config, httpserver, app)
 
-            assertProperlyConstructed(server, config)
-            expect(server.app).to.be.equal(app)
-        })
-
-        function assertProperlyConstructed(server, config) {
             expect(server).to.exist
             expect(server).to.be.an.instanceof(Server)
             expect(server.start).to.exist
+            expect(server.stop).to.exist
             expect(server.config).to.exist
             expect(server.app).to.exist
+            expect(server.app).to.be.equal(app)
             expect(server.httpServer).to.exist
+            expect(server.httpServer).to.be.equal(httpserver)
             expect(server.config).to.deep.equal(config)
-        }
+        })
     })
 
     describe('start', function() {
-        var server, listenStub
+        var server
 
         beforeEach(function() {
-            server = new Server(config)
-            listenStub = sinon.stub(server.httpServer, 'listen')
-        })
-
-        afterEach(function() {
-            listenStub.restore()
+            server = new Server(config, httpServer, {})
         })
 
         it('starts a server on the configured port', function() {
-            server.start()
-            expect(listenStub.calledOnce).to.be.true
-            expect(listenStub.firstCall.args[0]).to.be.equal(config.port)
+            var promise = server.start()
+            expect(httpServer.listen.calledOnce).to.be.true
+            expect(httpServer.listen.firstCall.args[0]).to.be.equal(config.port)
+            expect(promise).to.be.a('object')
+        })
+
+        it('resolves the promise when listening complete', function() {
+            var promise
+
+            httpServer.listen.callsArg(1)
+            promise = server.start()
+            return expect(promise).to.eventually.equal(server)
+        })
+
+        it('rejects the promise when listening throws', function () {
+            var error = new Error('test')
+            var promise
+
+            httpServer.listen.throws(error)
+            promise = server.start()
+            return expect(promise).to.be.rejected
         })
     })
 
     describe('stop', function() {
-        var server, closeStub
+        var server
 
         beforeEach(function() {
-            server = new Server(config)
-            closeStub = sinon.stub(server.httpServer, 'close')
-        })
-
-        afterEach(function() {
-            closeStub.restore()
+            server = new Server(config, httpServer, {})
         })
 
         it('stops a server', function() {
             server.stop()
-            expect(closeStub.calledOnce).to.be.true
+            expect(httpServer.close.calledOnce).to.be.true
         })
     })
 })
