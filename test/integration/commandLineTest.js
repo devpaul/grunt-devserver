@@ -2,15 +2,23 @@ var http = require('http')
   , Q = require('q')
 
 describe('create a server from the command line', function() {
-    it('starts a server when no arguments are supplied', function(done) {
+    var httpStub
+
+    beforeEach(function() {
+        httpStub = sinon.stub(http, 'createServer')
+    })
+
+    it('starts a server when no arguments are supplied', function() {
         var deferred = Q.defer()
           , promise = deferred.promise
-          , stub = sinon.stub(http, 'createServer', deferred.resolve)
+
+        httpStub.returns({ listen: deferred.resolve })
         require('../../bin/devserver')
-        expect(promise).to.be.fulfilled
-        promise.then(function () {
-            stub.restore()
-            done()
-        })
+
+        return expect(promise).to.be.fulfilled
+    })
+
+    afterEach(function() {
+        httpStub.restore()
     })
 })
