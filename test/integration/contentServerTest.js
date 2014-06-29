@@ -2,6 +2,7 @@ var request = require('supertest')
   , path = require('path')
   , createExpressMiddleware = require('../../lib/commands/createMiddlewareCmd.js')
   , HttpConfig = require('../../lib/model/config/HttpConfig.js')
+  , CommonConfig = require('../../lib/model/config/CommonConfig.js')
 
 describe('contentServerTest', function() {
     var config
@@ -45,7 +46,7 @@ describe('contentServerTest', function() {
         })
 
         it('adds no-cache headers', function(done) {
-            assertExpectedCacheHeaders(app, HttpConfig.DEFAULT.cacheControl, done)
+            assertExpectedCacheHeaders(app, CommonConfig._DEFAULT.cacheControl, done)
         })
 
         it('replies 304 for cached content', function(done) {

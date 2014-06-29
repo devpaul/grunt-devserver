@@ -1,5 +1,4 @@
 var Sandbox = require('sandboxed-module')
-  , loadCompleteOptionsCmd = require('../../lib/commands/loadCompleteOptionsCmd.js')
   , devserver
 
 describe('indexTest', function() {
