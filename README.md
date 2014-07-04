@@ -122,60 +122,60 @@ projects or used from the command-line.
 #### type
 The type of server
 
-type: `string`
-default: `http`
-command line: `-t, --type`
+Type: `string`   
+Default: `http`   
+Command line: `-t, --type`   
 
 #### port
 The port where the server will respond
 
-type: `number`
-default: `8888`
-command line: `-p, --port`
+type: `number`   
+default: `8888`   
+command line: `-p, --port`   
 
 #### base
 The base directory of the web server.  This is where files will be served.  This configuration is passed to the
 `serve-index` middleware.
 
-type: `String`
-default: `'.'`
-command line: `-f, --folder`
+type: `String`   
+default: `'.'`   
+command line: `-f, --folder`   
 
 #### cache
 The type of caching mechanism to use.  The `noCacheHeaders` middleware uses this value to add `Cache-Control`
 headers to the HTTP response.
 
-type: `String`
-default: `no-cache`
-command line: `--cache`
+type: `String`   
+default: `no-cache`   
+command line: `--cache`   
 
 #### httpsOptions
 `httpsOptions` are passed directly through to node's https.createServer() method. [Read the docs for more information][nodehttps].
 This is ignored unless the server type is specified as `https`.  When a signing certificate is not present, one will be
 automatically generated.
 
-type: `object`
-default: none
+type: `object`   
+default: none   
 
 #### file
 As external configuration file. See [Using Configuration Files](#configuration) for samples on how to use file
 configurations with devserver
 
-type: `string`
-default: none
-command line: `--file`
+type: `string`   
+default: none   
+command line: `--file`   
 
 #### async
 `async` if set to true it will keep Grunt from terminating (see [Grunt Tasks])
 
-type: `boolean`
-default: `true`
+type: `boolean`   
+default: `true`   
 
 #### middleware
 Redefines the middleware stack to be used by the server.
 
-type: `array` or `function`
-default: @see `model/CommonConfig.defaultMiddleware`
+type: `array` or `function`   
+default: @see `model/CommonConfig.defaultMiddleware`   
 
 Example: redefine the middleware to log the request and send a hello world message
 ```
